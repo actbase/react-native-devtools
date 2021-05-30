@@ -16,7 +16,7 @@ const AppContainer = () => {
   const Stack = React.useMemo(() => createStackNavigator(), []);
   const navRef = React.useRef();
 
-  console.log(navRef);
+  // console.log(navRef);
 
   return (
     <NavigationContainer
