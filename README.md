@@ -17,3 +17,7 @@ React & React native devtools. In your own services.
 # Getting started
 
 # props / methods
+
+# 
+  - [-] AxiosLog 
+  - [-] AsyncStorage 

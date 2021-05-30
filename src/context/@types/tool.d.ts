@@ -1,10 +1,13 @@
 type ToolType = 'axiosLog' | undefined;
 
 interface IDevTool {
-  isShowDevTool : boolean;
-  type: ToolType;
-  setShowDevTool: (isShow: boolean) => void;
-  setToolType: (type: ToolType) => void;
-  closeToolBar: () => void;
-  openToolBar: () => void;
+  axiosLog:[boolean, Dispatch<SetStateAction<boolean>>] | undefined;
+  asyncStorage:[boolean, Dispatch<SetStateAction<boolean>>] | undefined;
 }
+interface IDevToolsAsyncStorage {
+  handleOffset?:number | undefined
+}
+
+
+interface Move { x: number | AnimatedValue; y: number | AnimatedValue }
+interface Size { x: number | AnimatedValue; y: number | AnimatedValue }

@@ -1,12 +1,8 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext } from 'react';
 
 const defaultToolContext: IDevTool = {
-  isShowDevTool: false,
-  type: undefined,
-  setShowDevTool: () => {},
-  setToolType: () => {},
-  closeToolBar: () => {},
-  openToolBar: () => {},
+  axiosLog:undefined,
+  asyncStorage:undefined,
 };
 
 const ToolContext = createContext(defaultToolContext);
@@ -16,30 +12,14 @@ interface IProps {
 }
 
 const ToolContextProvider = ({ children }: IProps) => {
-  const [isShowDevTool, setShowDevTool] = useState<boolean>(false);
-  const [type, setType] = useState<ToolType>(undefined);
-
-  const setToolType = (type: ToolType) => {
-    setType(type);
-  };
-
-  const closeToolBar = () => {
-    // TODO close Bar
-  };
-
-  const openToolBar = () => {
-    // TODO open Bar
-  };
+  const axiosLog = React.useState<boolean>(false);
+  const asyncStorage = React.useState<boolean>(false);
 
   return (
     <ToolContext.Provider
       value={{
-        isShowDevTool,
-        type,
-        setShowDevTool,
-        setToolType,
-        closeToolBar,
-        openToolBar,
+        axiosLog,
+        asyncStorage,
       }}>
       {children}
     </ToolContext.Provider>

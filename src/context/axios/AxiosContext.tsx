@@ -1,111 +1,92 @@
-import React, { useState, createContext } from 'react';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import React, { createContext } from 'react';
+import { generateUnique } from '../../utils';
+import {
+  AxiosContenxtProviderProps,
+  IAxiosInterceptor,
+  IAxiosLog,
+  IAxiosLogContext,
+  IAxiosRequestConfig,
+  IAxiosResponse,
+} from '../@types/axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const defaultAxiosContext: IAxiosLogContext = {
-  reqLog: [],
-  resLog: [],
-  useInterceptor: () => { },
-  ejectInterceptor: () => { },
+  logs: [],
   clearLogList: () => { },
 };
 
 const AxiosContext = createContext(defaultAxiosContext);
 
-interface Props {
-  children: JSX.Element | Array<JSX.Element>;
-}
+// for keep logs 
+const __logs: Array<IAxiosLog> = [];
 
-const AxiosContextProvider = ({ children }: Props) => {
-  const [reqId, setReqId] = useState<number | undefined>(undefined);
-  const [resId, setResId] = useState<number | undefined>(undefined);
-  const [reqLog, setReqLog] = useState<Array<IAxiosLog>>([]);
-  const [resLog, setResLog] = useState<Array<IAxiosLog>>([]);
-
-  const getDate = () => {
-    const now = new Date();
-    return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}:${now.getMilliseconds()}`;
-  };
-
-  const getReqLog = (config: AxiosRequestConfig, isError: boolean = false) => {
-    if (isError) {
-
-    }
-    return `url = ${config.url}`;
-  };
-
-  const getResLog = (response: AxiosResponse, isError: boolean = false) => {
-    if (isError) {
-
-    }
-    return `data = ${JSON.stringify(response.data)}`;
-  };
-
-  const getLogFormat = (config?: AxiosRequestConfig, response?: AxiosResponse, isError: boolean = false) => {
-    const log = config ? getReqLog(config) : getResLog(response!);
-    const type: logType = config ? 'request' : 'response';
-    const logResult: IAxiosLog = {
-      id: '',
-      time: getDate(),
-      log,
-      type,
-      isError,
-      status: response ? response.status : undefined,
-      method: config ? config.method : undefined,
-    };
-
-    return logResult;
-  };
-
-  const reqInterceptor = () => {
-    return axios.interceptors.request.use(
-      (config: AxiosRequestConfig) => {
-        setReqLog(prevlog => [...prevlog, getLogFormat(config, undefined, false)]);
-        return config;
-      },
-      (error: any) => {
-        setReqLog(prevlog => [...prevlog, getLogFormat(error, undefined, true)]);
-        return error;
-      },
-    );
-  };
-
-  const resInterceptor = () => {
-    return axios.interceptors.response.use(
-      (response: AxiosResponse) => {
-        setResLog(prevLog => [...prevLog, getLogFormat(undefined, response, false)]);
-        return response;
-      },
-      (error: any) => {
-        setResLog(prevLog => [...prevLog, getLogFormat(undefined, error, true)]);
-        return error;
-      },
-    );
-  };
-
-  const useInterceptor = () => {
-    setReqId(reqInterceptor());
-    setResId(resInterceptor());
-  };
-
-  const ejectInterceptor = () => {
-    reqId && axios.interceptors.request.eject(reqId);
-    resId && axios.interceptors.response.eject(resId);
-    setReqId(undefined);
-    setResId(undefined);
-  };
-
+const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProviderProps) => {
+  const [logs, setLogs] = React.useState<Array<IAxiosLog>>(__logs);
   const clearLogList = () => {
-    setReqLog([]);
-    setResLog([]);
+    setLogs([]);
   };
+  const createLog = (config: IAxiosRequestConfig) => {
+    config.uid = generateUnique();
+    console.log('devTools::request', config.uid);
+    const log: IAxiosLog = {
+      uid:config.uid,
+      time: Date.now(),
+      config,
+      method: config?.method,
+    };
+    __logs.unshift(log);
+    setLogs(__logs);
+  };
+
+  const linkResponse = (response: IAxiosResponse) => {
+    const log = __logs.find((log) => log.uid === response.config.uid);
+    console.log('devTools::response', log?.uid );
+    if (log) {
+      log.isError = false;
+      log.elapse = Date.now() - log.time;
+      log.status = response.status;
+      log.response = response;
+      setLogs([...__logs]);
+    }
+  }
+
+  React.useEffect(() => {
+    if (!Array.isArray(axiosInstances)) return;
+    const requestInstancesIds: Array<IAxiosInterceptor> = axiosInstances.map((instance) => {
+      return {
+        instance,
+        interceptorId: instance.interceptors.request.use((config: AxiosRequestConfig) => {
+          createLog(config as IAxiosRequestConfig);
+          return config
+        }, () => {
+        })
+      }
+    });
+    const responseInstancesIds: Array<IAxiosInterceptor> = axiosInstances.map((instance) => {
+      return {
+        instance,
+        interceptorId: instance.interceptors.response.use((response: AxiosResponse) => {
+          linkResponse(response as IAxiosResponse);
+          return response;
+        }, () => {
+        })
+      }
+    });
+
+    return () => {
+      requestInstancesIds.map(({ instance, interceptorId }) => {
+        instance.interceptors.request.eject(interceptorId);
+      });
+      responseInstancesIds.map(({ instance, interceptorId }) => {
+        instance.interceptors.response.eject(interceptorId);
+      })
+    }
+  }, [axiosInstances]);
 
   return (
     <AxiosContext.Provider
       value={{
-        reqLog,
-        resLog,
-        useInterceptor,
-        ejectInterceptor,
+        logs,
         clearLogList,
       }}>
       {children}

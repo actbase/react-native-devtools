@@ -6,29 +6,26 @@
  * @flow strict-local
  */
 
-import type { Node } from 'react';
 import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import DevTools from '@actbase/react-devtools';
+import DevTools from '@actbase/react-native-devtools';
+import { restApi } from './src/pages/AxiosLogSample';
 
-const App: () => Node = () => {
+import AppContainer from './src/nav/AppContainer';
+
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
   return (
     <>
-      <Absolute.Provider>
-        <SafeAreaView style={backgroundStyle}>
-          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-          <View style={StyleSheet.container}></View>
-        </SafeAreaView>
-      </Absolute.Provider>
-      <DevTools />
+      <View style={{ flex: 1 }}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <AppContainer 
+        />
+        <DevTools axiosInstances={[restApi]} />
+      </View>
     </>
   );
 };

@@ -1,19 +1,36 @@
-type logType = 'request' | 'response';
+import { AxiosResponse, AxiosRequestConfig } from 'axios';
+
+interface IAxiosRequestConfig extends AxiosRequestConfig {
+  uid: string;
+}
+
+interface IAxiosResponse extends AxiosResponse {
+  config: IAxiosRequestConfig;
+}
 
 interface IAxiosLog {
-  id: string;
-  time: string;
-  log: string;
-  type: logType;
-  isError: boolean;
-  status: number | undefined;
+  uid: string;
+  time: number;
   method: string | undefined;
+  config: IAxiosRequestConfig;
+
+  isError?: boolean;
+  elapse?: number;
+  status?: number | undefined;
+  response?: IAxiosResponse;
 }
 
 interface IAxiosLogContext {
-  reqLog: Array<IAxiosLog>;
-  resLog: Array<IAxiosLog>;
-  useInterceptor: () => void;
-  ejectInterceptor: () => void;
+  logs: Array<IAxiosLog>;
   clearLogList: () => void;
+}
+
+interface AxiosContenxtProviderProps {
+  children: JSX.Element | Array<JSX.Element>;
+  axiosInstances: Array<AxiosInstance>;
+}
+
+interface IAxiosInterceptor {
+  instance: AxiosInstance;
+  interceptorId: number;
 }
