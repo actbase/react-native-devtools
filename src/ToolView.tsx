@@ -124,13 +124,17 @@ const styles = StyleSheet.create({
   },
 
   poweredBy: {
-    flexDirection: 'row', justifyContent: 'center', alignItems: 'center'
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor:'white',
   },
   actbase: {
     width: 50,
     height: 50,
     resizeMode: 'contain',
-    marginRight:20,
+    marginRight: 20,
   }
 });
 interface Props {
