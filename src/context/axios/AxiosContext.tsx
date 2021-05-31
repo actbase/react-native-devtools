@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { generateUnique } from '../../utils';
+import { generateUnique } from '../../utils/utils';
 import {
   AxiosContenxtProviderProps,
   IAxiosInterceptor,
@@ -50,18 +50,6 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
       setLogs([...__logs]);
     }
   }
-
-  // const linkError = (error: any) => {
-  //   const log = __logs.find((log) => log.uid === error.config.uid);
-  //   console.log('devTools::response with error', log?.uid, error, JSON.stringify( error, undefined, 2 ), error.response );
-  //   if (log) {
-  //     log.isError = false;
-  //     log.elapse = Date.now() - log.time;
-  //     log.status = error.status;
-  //     log.response = error;
-  //     setLogs([...__logs]);
-  //   }
-  // }
 
   React.useEffect(() => {
     if (!Array.isArray(axiosInstances)) return;

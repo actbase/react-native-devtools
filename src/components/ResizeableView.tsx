@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, Animated, Dimensions } from 'react-native';
-import ASGesutreResponder from '../components/ASGesutreResponder';
-import TransformerButton from '../components/TransformerButton';
+import ASGesutreResponder from './useASGesutreResponder';
+import TransformerButton from './TransformerButton';
 interface Props {
   title: string;
   onClose?: Function;

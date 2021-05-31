@@ -1,4 +1,4 @@
-import Emitter from '../../Emitter';
+import Emitter from '../../utils/Emitter';
 export const EventShowDevTool: string = 'showDevTool';
 
 export const addDevToolEnableListener = (callback: (arg0: boolean)=>void )=>Emitter.add(EventShowDevTool, (isShow: boolean) => callback(isShow));

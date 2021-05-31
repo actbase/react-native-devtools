@@ -1,6 +1,6 @@
 import React from 'react';
 import { GestureResponderEvent, Animated } from 'react-native';
-import ASStore from '../ASStore';
+import ASStore from '../utils/ASStore';
 interface Value {
   x: number;
   y: number;

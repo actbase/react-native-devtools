@@ -3,13 +3,13 @@ import {
   View,
   Text,
   Animated,
-  Easing,
+  // Easing,
   StyleSheet,
   ScrollView,
 } from 'react-native';
 
 import DeviceInfo from 'react-native-device-info';
-import { getByteSizeAdjust } from '../utils';
+import { getByteSizeAdjust } from '../utils/utils';
 import ToolButton from '../components/ToolButton';
 // const DevTreeView = require('react-native-dev-treeview').default;
 const InfoRowHeight = 26;
@@ -65,24 +65,24 @@ const DeviceInfoView = () => {
   React.useEffect(() => {
     const loadInfo = async () => {
       const info = await [
-        { name: 'Version',       getter: () => Promise.resolve(DeviceInfo.getVersion()) },
-        { name: 'Build Number',  getter: () => Promise.resolve(DeviceInfo.getBuildNumber()) },
-        { name: 'Bundle Id',     getter: () => Promise.resolve(DeviceInfo.getBundleId()) },
-        { name: 'Device Id',     getter: () => Promise.resolve(DeviceInfo.getDeviceId()) },
-        { name: 'Android Id',    getter: () => Promise.resolve(DeviceInfo.getAndroidId()) },
-        { name: 'Used Memory',   getter: () => DeviceInfo.getUsedMemory().then(size => getByteSizeAdjust(size)) },
-        { name: 'Total Memory',  getter: () => DeviceInfo.getTotalMemory().then(size => getByteSizeAdjust(size)) },
-        { name: 'Free DiskSpace',getter: () => DeviceInfo.getFreeDiskStorage().then(size => getByteSizeAdjust(size)) },
-        { name: 'IP Address',    getter: () => DeviceInfo.getIpAddress() },
-        { name: 'MAC Address',   getter: () => DeviceInfo.getMacAddress() },
-        { name: 'Has Notch',     getter: () => Promise.resolve(DeviceInfo.hasNotch() ? 'true' : 'false') },
-        { name: 'Brand',         getter: () => Promise.resolve(DeviceInfo.getBrand()) },
-        { name: 'Model',         getter: () => Promise.resolve(DeviceInfo.getModel()) },
-        { name: 'Device Name',   getter: () => DeviceInfo.getDeviceName() },
-        { name: 'System Name',   getter: () => Promise.resolve(DeviceInfo.getSystemName()) },
-        { name: 'System Version',getter: () => Promise.resolve(DeviceInfo.getSystemVersion()) },
+        { name: 'Version', getter: () => Promise.resolve(DeviceInfo.getVersion()) },
+        { name: 'Build Number', getter: () => Promise.resolve(DeviceInfo.getBuildNumber()) },
+        { name: 'Bundle Id', getter: () => Promise.resolve(DeviceInfo.getBundleId()) },
+        { name: 'Device Id', getter: () => Promise.resolve(DeviceInfo.getDeviceId()) },
+        { name: 'Android Id', getter: () => Promise.resolve(DeviceInfo.getAndroidId()) },
+        { name: 'Used Memory', getter: () => DeviceInfo.getUsedMemory().then(size => getByteSizeAdjust(size)) },
+        { name: 'Total Memory', getter: () => DeviceInfo.getTotalMemory().then(size => getByteSizeAdjust(size)) },
+        { name: 'Free DiskSpace', getter: () => DeviceInfo.getFreeDiskStorage().then(size => getByteSizeAdjust(size)) },
+        { name: 'IP Address', getter: () => DeviceInfo.getIpAddress() },
+        { name: 'MAC Address', getter: () => DeviceInfo.getMacAddress() },
+        { name: 'Has Notch', getter: () => Promise.resolve(DeviceInfo.hasNotch() ? 'true' : 'false') },
+        { name: 'Brand', getter: () => Promise.resolve(DeviceInfo.getBrand()) },
+        { name: 'Model', getter: () => Promise.resolve(DeviceInfo.getModel()) },
+        { name: 'Device Name', getter: () => DeviceInfo.getDeviceName() },
+        { name: 'System Name', getter: () => Promise.resolve(DeviceInfo.getSystemName()) },
+        { name: 'System Version', getter: () => Promise.resolve(DeviceInfo.getSystemVersion()) },
       ].map(({ name, getter }) => (collector: []) => getter().then((value) => [...collector, { name, value }]))
-      .reduce((p, c: any) => p.then(c), Promise.resolve([]));
+        .reduce((p, c: any) => p.then(c), Promise.resolve([]));
       setInfo(info);
     };
     loadInfo();
@@ -93,14 +93,15 @@ const DeviceInfoView = () => {
     Animated.timing(animate, {
       toValue: isShowInfo ? 1 : 0,
       duration: 500,
-      easing: Easing.bounce,
+      // easing: Easing.bounce,
       useNativeDriver: false,
     }).start(() => {
       setDisplayInfo(isShowInfo);
     });
   }, [isShowInfo]);
 
-  const rotate = animate.interpolate({ inputRange: [0, 1], outputRange: ['90deg', '0deg'] });
+  const rotate = animate.interpolate({ inputRange: [0, 1], outputRange: ['90deg', '360deg'] });
+  const rotate2 = animate.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 
   return (
     <View style={{}}>
@@ -108,7 +109,7 @@ const DeviceInfoView = () => {
         onPress={() => setShowInfo(!isShowInfo)}
         renderBeforeChildren={() => (
           <View style={styles.infoShowIndicatorWrapper}>
-            <View style={styles.infoShowIndicator} />
+            <Animated.View style={[styles.infoShowIndicator, { transform: [{ rotate:rotate2 }] }]} />
             <Animated.View style={[styles.infoShowIndicator, { transform: [{ rotate }] }]} />
           </View>
         )}

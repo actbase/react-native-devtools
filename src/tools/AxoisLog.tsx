@@ -3,7 +3,7 @@ import { View, ActivityIndicator, StyleSheet, Text, FlatList, TouchableOpacity }
 
 import Button from '../components/Button';
 import { AxiosContext } from '../context/axios/AxiosContext';
-import ResizeableView from './ResizeableView';
+import ResizeableView from '../components/ResizeableView';
 import { IAxiosLog } from '../context/@types/axios';
 import { ToolContext } from '../context/toolManager/ToolContext';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   },
   headerExtra: {
     flexDirection: 'row',
-  }
+  },
+
 });
 
 const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {

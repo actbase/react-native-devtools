@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import Button from '../components/Button';
-import ResizeableView from './ResizeableView';
+import ResizeableView from '../components/ResizeableView';
 import { ToolContext } from '../context/toolManager/ToolContext';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const DevTreeView = require('react-native-dev-treeview').default;
-import { generateUnique } from '../utils';
-import { useASStoredState } from '../ASStore';
+import { generateUnique } from '../utils/utils';
+import { useASStoredState } from '../utils/ASStore';
 
 const styles = StyleSheet.create({
   container: {

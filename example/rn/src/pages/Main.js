@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
 
 const TransformerButton = ({ onPress, isClose }) => {
   const animated = React.useRef(new Animated.Value(0)).current;
-  
+
   React.useEffect(() => {
     Animated.timing(animated, {
       toValue: isClose ? 0 : 1,
       duration: 500,
-      useNativeDriver:false,
+      useNativeDriver: false,
     }).start();
   }, [isClose]);
 
@@ -120,7 +120,34 @@ const Main = () => {
   return (
     <View style={styles.container}>
       <Text>Main</Text>
-      
+
+      <TouchableOpacity
+        style={common_styles.button}
+        onPress={() => {
+          console.log('log', { a: { b: 'c' } });
+        }}
+      >
+        <Text>console.log</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={common_styles.button}
+        onPress={() => {
+          console.warn('warn', { a: { b: 'c' } });
+        }}
+      >
+        <Text>console.warn</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={common_styles.button}
+        onPress={() => {
+          console.error('error', { a: { b: 'c' } } ,{ a: { b: 'c' }} );
+        }}
+      >
+        <Text>console.error</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={common_styles.button} onPress={handlePress}>
         <Text>{isEnabledDevTool ? 'Hide' : 'Show'} DevTools</Text>
       </TouchableOpacity>
