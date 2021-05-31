@@ -1,30 +1,38 @@
 import React from 'react';
 import { GestureResponderEvent, Animated } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ASStore from '../ASStore';
 interface Value {
   x: number;
   y: number;
 }
+
+interface ManageValues {
+  start: {
+    offset: Value;
+    move: Value;
+  };
+  current: Value | undefined;
+  pan: Animated.ValueXY;
+}
+
+interface IASGesutreResponder {
+  key?: string;
+  initialValue?: Value;
+  onPress?: Function;
+  touchDelayMS?: number;
+  min?: Value;
+  max?: Value;
+}
+
 const ASGesutreResponder = ({
   key,
   initialValue,
   onPress,
   touchDelayMS = 200,
-}: {
-  key: string;
-  initialValue?: Value;
-  onPress?: Function;
-  touchDelayMS?: number;
-}) => {
-  const [isLoad, setIsLoad] = React.useState<boolean>(false);
-  const ref = React.useRef<{
-    start: {
-      offset: Value;
-      move: Value;
-    };
-    current: Value | undefined;
-    pan: Animated.ValueXY;
-  }>({
+  min = { x: Number.MIN_SAFE_INTEGER, y: Number.MIN_SAFE_INTEGER },
+  max = { x: Number.MAX_SAFE_INTEGER, y: Number.MAX_SAFE_INTEGER },
+}: IASGesutreResponder) => {
+  const ref = React.useRef<ManageValues>({
     start: {
       offset: { x: 0, y: 0 },
       move: { x: 0, y: 0 },
@@ -35,20 +43,14 @@ const ASGesutreResponder = ({
 
   React.useEffect(() => {
     if (!key) return;
-    AsyncStorage.getItem(key).then(v => {
-      setIsLoad(true);
-      if (!v) {
-        return;
-      }
-      const data = JSON.parse(v);
-      ref.pan.setValue((ref.current = { x: data.x, y: data.y }));
-    });
+    const v = ASStore.get(key);
+    if (!v || !v.x || !v.y) return;
+    ref.pan.setValue((ref.current = v));
   }, [key]);
 
   const handleTouchTime = React.useRef<number>(0);
 
   return {
-    isLoad,
     pan: ref.pan,
     responder: {
       onStartShouldSetResponder: () => true,
@@ -58,24 +60,16 @@ const ASGesutreResponder = ({
         if (onPress) handleTouchTime.current = Date.now();
       },
       onResponderMove: ({ nativeEvent: { pageX, pageY } }: GestureResponderEvent) => {
-        ref.pan.setValue(
-          (ref.current = {
-            x: ref.start.move.x + pageX - (ref.start.offset.x || 0),
-            y: ref.start.move.y + pageY - (ref.start.offset.y || 0),
-          }),
-        );
+        const x = Math.max(min.x, Math.min(ref.start.move.x + pageX - (ref.start.offset.x || 0), max.x));
+        const y = Math.max(min.y, Math.min(ref.start.move.y + pageY - (ref.start.offset.y || 0), max.y));
+        ref.pan.setValue((ref.current = { x, y }));
       },
       onResponderRelease: ({ nativeEvent: { pageX, pageY } }: GestureResponderEvent) => {
-        if (onPress && Date.now() - handleTouchTime.current < touchDelayMS) {
-          onPress();
-        }
-        ref.pan.setValue(
-          (ref.current = {
-            x: ref.start.move.x + pageX - (ref.start.offset.x || 0),
-            y: ref.start.move.y + pageY - (ref.start.offset.y || 0),
-          }),
-        );
-        AsyncStorage.setItem(key, JSON.stringify(ref.current));
+        if (onPress && Date.now() - handleTouchTime.current < touchDelayMS) onPress();
+        const x = Math.max(min.x, Math.min(ref.start.move.x + pageX - (ref.start.offset.x || 0), max.x));
+        const y = Math.max(min.y, Math.min(ref.start.move.y + pageY - (ref.start.offset.y || 0), max.y));
+        ref.pan.setValue((ref.current = { x, y }));
+        if (key) ASStore.set(key, ref.current);
       },
     },
   };

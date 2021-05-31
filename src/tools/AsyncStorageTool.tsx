@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const DevTreeView = require('react-native-dev-treeview').default;
 import { generateUnique } from '../utils';
+import { useASStoredState } from '../ASStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
 });
 
 
-const AsyncStorageToolView = ({ }) => {
+const AsyncStorageToolView = ({ fontSize }: { fontSize: number }) => {
   const [data, setData] = React.useState<any>();
   React.useEffect(() => {
     AsyncStorage.getAllKeys()
@@ -77,7 +78,8 @@ const AsyncStorageToolView = ({ }) => {
     <ScrollView style={{ flex: 1 }}>
       <ScrollView horizontal>
         <DevTreeView
-          fontSize={14}
+          key={`${fontSize}`}
+          fontSize={fontSize}
           autoExtendRoot
           data={data}
         />
@@ -90,6 +92,7 @@ const AsyncStorageToolView = ({ }) => {
 const AsyncStorageTool = (): JSX.Element | null => {
   const { asyncStorage: [isShow, setShow] = [] } = useContext(ToolContext);
   const [uid, setUid] = React.useState<string>(generateUnique());
+  const [fontSize, setFontSize] = useASStoredState('AsyncStorage_FontSize', 14);
 
   if (!isShow) return null;
 
@@ -102,6 +105,12 @@ const AsyncStorageTool = (): JSX.Element | null => {
     await AsyncStorage.multiRemove(keys);
     refresh();
   }
+  const fontSizeUp = () => {
+    setFontSize(prev => Math.min(24, prev + 1));
+  }
+  const fontSizeDown = () => {
+    setFontSize(prev => Math.max(7, prev - 1));
+  }
 
   return (
     <ResizeableView
@@ -110,13 +119,15 @@ const AsyncStorageTool = (): JSX.Element | null => {
       renderHeaderExtra={() => {
         return (
           <View style={styles.headerExtra}>
+            <Button onPress={fontSizeUp}>+</Button>
+            <Button onPress={fontSizeDown}>-</Button>
             <Button onPress={refresh}>R</Button>
             <Button onPress={removeAll}>C</Button>
           </View>
         )
       }}
     >
-      <AsyncStorageToolView key={uid} />
+      <AsyncStorageToolView key={uid} fontSize={fontSize} />
     </ResizeableView>
   );
 };

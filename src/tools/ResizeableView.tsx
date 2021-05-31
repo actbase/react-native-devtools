@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ViewStyle, Animated } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, Animated, Dimensions } from 'react-native';
 import ASGesutreResponder from '../components/ASGesutreResponder';
-
+import TransformerButton from '../components/TransformerButton';
 interface Props {
   title: string;
-  onClose?: Function,
-  contentContainerStyle?: ViewStyle,
+  onClose?: Function;
+  isClose?: boolean;
+  contentContainerStyle?: ViewStyle;
   children?: JSX.Element | React.Component;
   nowMove?: boolean;
   renderHeaderExtra?: Function;
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     minWidth: 200,
-    minHeight: 200,
+    minHeight: 100,
     backgroundColor: '#00000099',
     justifyContent: 'space-between',
     borderRadius: 5,
@@ -36,15 +37,15 @@ const styles = StyleSheet.create({
     right: 0,
     height: 30,
     width: 30,
-    backgroundColor:'transparent',
+    backgroundColor: 'transparent',
   },
   resizeHandleInner: {
-    position:'absolute',
+    position: 'absolute',
     width: 0,
     height: 0,
-    right:0,
-    bottom:0,
-    zIndex:0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
     borderBottomWidth: 30,
@@ -52,39 +53,17 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ffffff88',
   },
   resizeHandleInner2: {
-    position:'absolute',
+    position: 'absolute',
     width: 0,
     height: 0,
-    right:0,
-    bottom:0,
-    zIndex:1,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
     borderBottomWidth: 15,
     borderLeftWidth: 15,
     borderBottomColor: '#ffffff88',
-  },
-  buttonClose: {
-    height: 30,
-    width: 30,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonCloseCross1: {
-    position: 'absolute',
-    width: 15,
-    height: 2,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    transform: [{ rotate: '45deg' }]
-  },
-  buttonCloseCross2: {
-    position: 'absolute',
-    width: 15,
-    height: 2,
-    borderRadius: 2,
-    backgroundColor: 'white',
-    transform: [{ rotate: '-45deg' }]
   },
 });
 
@@ -95,15 +74,24 @@ const ResizeableView = ({
   onClose,
   renderHeaderExtra,
   renderFooter,
-}: Props): JSX.Element => {
+  isClose = true,
+}: Props): JSX.Element | null => {
+
+  const window = Dimensions.get('window');
   const move = ASGesutreResponder({
-    key: `__DevTool_${title}_move__`,
-    initialValue: { x: 50, y: 50 }
+    key: `${title}_move`,
+    initialValue: { x: 50, y: 50 },
+    max: { x: window.width - 80, y: window.height - 80 },
+    min: { x: -window.width / 2, y: -window.height / 2 }
   });
+
   const resize = ASGesutreResponder({
-    key: `__DevTool_${title}_resize__`,
-    initialValue: { x: 200, y: 200 }
+    key: `${title}_resize`,
+    initialValue: { x: 200, y: 200 },
+    max: { x: window.width, y: window.height },
+    min: { x: 200, y: 100 }
   });
+
   return (
     <Animated.View
       style={[
@@ -116,12 +104,11 @@ const ResizeableView = ({
         { width: resize.pan.x, height: resize.pan.y },
       ]}>
       <View style={styles.topView} {...move.responder}>
-        <TouchableOpacity style={styles.buttonClose} onPress={() => {
-          onClose?.();
-        }}>
-          <View style={styles.buttonCloseCross1} />
-          <View style={styles.buttonCloseCross2} />
-        </TouchableOpacity>
+        <TransformerButton
+          onPress={() => onClose?.()}
+          isClose={isClose}
+        />
+
         <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text style={{ color: 'white', fontWeight: 'bold' }}>
             {title}
@@ -137,7 +124,7 @@ const ResizeableView = ({
       </View>
       {/* ResizeHandle */}
       <View style={styles.resizeHandle} {...resize.responder}>
-        <View style={styles.resizeHandleInner} />
+        {/* <View style={styles.resizeHandleInner} /> */}
         <View style={styles.resizeHandleInner2} />
       </View>
     </Animated.View>

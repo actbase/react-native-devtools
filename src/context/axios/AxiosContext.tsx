@@ -50,6 +50,18 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
     }
   }
 
+  // const linkError = (error: any) => {
+  //   const log = __logs.find((log) => log.uid === error.config.uid);
+  //   console.log('devTools::response with error', log?.uid, error, JSON.stringify( error, undefined, 2 ), error.response );
+  //   if (log) {
+  //     log.isError = false;
+  //     log.elapse = Date.now() - log.time;
+  //     log.status = error.status;
+  //     log.response = error;
+  //     setLogs([...__logs]);
+  //   }
+  // }
+
   React.useEffect(() => {
     if (!Array.isArray(axiosInstances)) return;
     const requestInstancesIds: Array<IAxiosInterceptor> = axiosInstances.map((instance) => {
@@ -69,8 +81,9 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
         interceptorId: instance.interceptors.response.use((response: AxiosResponse) => {
           linkResponse(response as IAxiosResponse);
           return response;
-        }, () => {
-          // TODO : implement cancel token 
+        }, (error : any) => {
+          linkResponse( error.response as IAxiosResponse );
+          return error;
         })
       }
     });

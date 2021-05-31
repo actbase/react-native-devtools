@@ -51,12 +51,9 @@ const styles = StyleSheet.create({
 });
 
 const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {
-  const { pop } = etc;
+  const { } = etc;
   return (
     <View style={{ flex: 1 }}>
-      <TouchableOpacity onPress={() => pop()}>
-        <Text>back</Text>
-      </TouchableOpacity>
       <ScrollView style={{ flex: 1 }}>
         <Text> - Request</Text>
         <ScrollView style={{ width: '100%' }} horizontal >
@@ -144,7 +141,9 @@ const AxiosLogList = (props: any) => {
 
 const AxoisLog = (): JSX.Element | null => {
   const { clearLogList } = useContext(AxiosContext);
-  const { axiosLog:[isShow, setShow] = [] } = useContext(ToolContext);
+  const { axiosLog: [isShow, setShow] = [] } = useContext(ToolContext);
+  const scenesRef = React.useRef<any>();
+  const [routeIndex, setRouteIndex] = React.useState<number>(0);
 
   if (!isShow) return null;
 
@@ -152,8 +151,10 @@ const AxoisLog = (): JSX.Element | null => {
     <ResizeableView
       title={'AxiosLog'}
       onClose={() => {
-        setShow(false)
+        if (routeIndex == 0) setShow(false);
+        scenesRef.current?.pop?.();
       }}
+      isClose={routeIndex == 0}
       renderHeaderExtra={() => {
         return (
           <View style={styles.headerExtra}>
@@ -164,9 +165,14 @@ const AxoisLog = (): JSX.Element | null => {
     >
       <View style={styles.container}>
         <Scenes
+          ref={scenesRef}
           style={{ backgroundColor: 'transparent' }}
           route={{
             component: AxiosLogList
+          }}
+          routeDidChange={(index: number) => {
+            console.log('routeDidChange', index);
+            setRouteIndex(index);
           }}
         />
       </View>

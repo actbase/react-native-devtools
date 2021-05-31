@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
   actbase: {
     width: 50,
@@ -177,7 +177,7 @@ const DeviceInfoView = () => {
   React.useEffect(() => {
     if (isShowInfo) setDisplayInfo(true);
     Animated.timing(animate, {
-      toValue: 1,
+      toValue: isShowInfo ? 1 : 0,
       duration: 500,
       easing: Easing.bounce,
       useNativeDriver: false,
@@ -284,11 +284,10 @@ const ToolHandle = ({
   translateX?: Animated.AnimatedInterpolation
 }) => {
   const handle = ASGesutreResponder({
-    key: '__DevTool_Handle__',
+    key: 'Handle',
+    initialValue: { x: 0, y: 0 },
     onPress
   });
-
-  if (!handle.isLoad) return null;
 
   return (
     <Animated.View
