@@ -39,7 +39,8 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
   };
 
   const linkResponse = (response: IAxiosResponse) => {
-    const log = __logs.find((log) => log.uid === response.config.uid);
+    console.log('',);
+    const log = __logs.find((log) => log.uid === response?.config.uid);
     console.log('devTools::response', log?.uid );
     if (log) {
       log.isError = false;
@@ -70,7 +71,9 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
         interceptorId: instance.interceptors.request.use((config: AxiosRequestConfig) => {
           createLog(config as IAxiosRequestConfig);
           return config
-        }, () => {
+        }, (error : any) => {
+          console.log(error);
+          return error
           // TODO : implement cancel token 
         })
       }

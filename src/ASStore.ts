@@ -5,9 +5,11 @@ const _store: { value: any; timeout: NodeJS.Timeout | null } = {
   timeout: null,
 };
 
-AsyncStorage.getItem('_DevTool_').then(value => {
-  if( value ) _store.value = JSON.parse(value);
-});
+(async () => {
+  AsyncStorage.getItem('_DevTool_').then(value => {
+    if (value) _store.value = JSON.parse(value);
+  });
+})();
 
 const ASStore: any = {
   set: async (key: string, value: Object | number | string) => {
@@ -15,7 +17,7 @@ const ASStore: any = {
       clearTimeout(_store.timeout);
       _store.timeout = null;
     }
-    _store.value = {..._store.value, [key]: value };
+    _store.value = { ..._store.value, [key]: value };
     _store.timeout = setTimeout(() => {
       if (_store.timeout) {
         clearTimeout(_store.timeout);
@@ -23,7 +25,7 @@ const ASStore: any = {
       }
       AsyncStorage.setItem('_DevTool_', JSON.stringify(_store.value));
     }, 1000);
-  },  
+  },
   get: (key: string): any => _store.value?.[key],
 };
 

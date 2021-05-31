@@ -12,12 +12,13 @@ import {
 } from 'react-native';
 
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ToolContext } from './context/toolManager/ToolContext';
-import { setEnableDevTool } from './context/devToolEmitter/devToolEmitter';
-import DeviceInfo from 'react-native-device-info';
-import { getByteSizeAdjust } from './utils';
-import ASGesutreResponder from './components/ASGesutreResponder';
-import assets from './assets';
+
+import { ToolContext } from '../context/toolManager/ToolContext';
+import { setEnableDevTool } from '../context/devToolEmitter/devToolEmitter';
+import ASGesutreResponder from './ASGesutreResponder';
+import assets from '../assets';
+import ToolButton from './ToolButton';
+import DeviceInfoView from '../tools/DeviceInfoView';
 // const DevTreeView = require('react-native-dev-treeview').default;
 const RNRestart = require('react-native-restart').default;
 
@@ -84,21 +85,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  tool: {
-    height: 44,
-    backgroundColor: '#00000099',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
-  },
-  toolNoLine: {
-    borderBottomWidth: 0,
-  },
-  toolCaption: {
-    color: 'white',
-  },
-
   infoContainer: {
     flexDirection: 'column',
   },
@@ -142,76 +128,6 @@ interface Props {
   position: string;
   setPosition: Function,
   toggleTool: Function
-}
-
-const ToolButton = ({ children, onPress, isLast }: any) => {
-  return (
-    <TouchableOpacity style={isLast ? [styles.tool, styles.toolNoLine] : styles.tool} onPress={onPress}>
-      <Text allowFontScaling={false} style={styles.toolCaption}>{children}</Text>
-    </TouchableOpacity>
-  )
-}
-const DeviceInfoView = () => {
-  const [isShowInfo, setShowInfo] = React.useState(false);
-  const [displayInfo, setDisplayInfo] = React.useState(false);
-  const animate = React.useRef(new Animated.Value(0)).current;
-  const info = React.useMemo(() => ([
-    { name: 'Version', value: DeviceInfo.getVersion() },
-    { name: 'Build Number', value: DeviceInfo.getBuildNumber() },
-    { name: 'Bundle Id', value: DeviceInfo.getBundleId() },
-    { name: 'Device Id', value: DeviceInfo.getDeviceId() },
-    { name: 'Android Id', value: DeviceInfo.getAndroidIdSync() },
-    { name: 'Used Memory', value: getByteSizeAdjust(DeviceInfo.getUsedMemorySync()) },
-    { name: 'Total Memory', value: getByteSizeAdjust(DeviceInfo.getTotalMemorySync()) },
-    { name: 'Free DiskSpace', value: getByteSizeAdjust(DeviceInfo.getFreeDiskStorageSync()) },
-    { name: 'IP Address', value: DeviceInfo.getIpAddressSync() },
-    { name: 'MAC Address', value: DeviceInfo.getMacAddressSync() },
-    { name: 'Has Notch', value: DeviceInfo.hasNotch() ? 'true' : 'false' },
-    { name: 'Brand', value: DeviceInfo.getBrand() },
-    { name: 'Model', value: DeviceInfo.getModel() },
-    { name: 'Device Name', value: DeviceInfo.getDeviceNameSync() },
-    { name: 'System Name', value: DeviceInfo.getSystemName() },
-    { name: 'System Version', value: DeviceInfo.getSystemVersion() },
-  ]), []);
-
-  React.useEffect(() => {
-    if (isShowInfo) setDisplayInfo(true);
-    Animated.timing(animate, {
-      toValue: isShowInfo ? 1 : 0,
-      duration: 500,
-      easing: Easing.bounce,
-      useNativeDriver: false,
-    }).start(() => {
-      setDisplayInfo(isShowInfo);
-    });
-  }, [isShowInfo])
-
-  return (
-    <View style={{}}>
-      <ToolButton onPress={() => setShowInfo(!isShowInfo)}>
-        {isShowInfo ? '-' : '+'} Device Info
-      </ToolButton>
-      {displayInfo && (
-        <Animated.View style={{
-          height: animate.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, info.length * InfoRowHeight],
-          })
-        }}>
-          <ScrollView horizontal contentContainerStyle={styles.infoContainer}>
-            {info.map(({ name, value }, index) => {
-              return (
-                <View style={index == info.length - 1 ? [styles.infoRow, { borderBottomWidth: 0 }] : styles.infoRow} key={index}>
-                  <Text allowFontScaling={false} style={styles.infoName}>{name}</Text>
-                  <Text allowFontScaling={false} style={styles.infoValue}>{value}</Text>
-                </View>
-              )
-            })}
-          </ScrollView>
-        </Animated.View>
-      )}
-    </View>
-  )
 }
 
 

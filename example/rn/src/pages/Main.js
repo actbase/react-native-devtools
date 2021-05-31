@@ -120,9 +120,11 @@ const Main = () => {
   return (
     <View style={styles.container}>
       <Text>Main</Text>
+      
       <TouchableOpacity style={common_styles.button} onPress={handlePress}>
         <Text>{isEnabledDevTool ? 'Hide' : 'Show'} DevTools</Text>
       </TouchableOpacity>
+
       <TouchableOpacity style={common_styles.button} onPress={() => navigation.navigate('AxiosLogSample')}>
         <Text>Axios Logs Sample</Text>
       </TouchableOpacity>

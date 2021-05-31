@@ -4,7 +4,7 @@ import { AxiosInstance } from 'axios';
 import AxoisLog from './tools/AxoisLog';
 import { AxiosContextProvider } from './context/axios/AxiosContext';
 import { ToolContextProvider } from './context/toolManager/ToolContext';
-import ToolView from './ToolView';
+import ToolView from './components/ToolView';
 import Emitter from './Emitter';
 import AsyncStorageTool from './tools/AsyncStorageTool';
 import { EventShowDevTool } from './context/devToolEmitter/devToolEmitter';
