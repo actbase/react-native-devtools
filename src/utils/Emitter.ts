@@ -10,7 +10,11 @@ const Emitter: IEmitter = {
     container.push(callback);
     return () => {
       const index = container.findIndex(c => c === callback);
-      if (index) container.splice(index, 1);
+      if (index > -1) {
+        container.splice(index, 1);
+        return true;
+      }
+      return false;
     };
   },
   emit: (event: string, ...args: any[]): void => (_listeners[event] || []).forEach(callback => callback(...args)),

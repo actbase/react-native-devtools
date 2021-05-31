@@ -39,8 +39,6 @@ const styles = StyleSheet.create({
   typeError: {
     color: '#cc6666'
   },
-
-
 });
 
 const getTypeStyle = (type: TLogType) => {
@@ -53,27 +51,22 @@ const getTypeStyle = (type: TLogType) => {
 const LogItem = ({ log, fontSize = 14 }: { log: ILog, fontSize: number }) => {
   return (
     <View style={styles.row}>
-      <Text style={[styles.logDate, getTypeStyle(log.type)]}>{log.date.toLocaleTimeString()}</Text>
+      <Text style={[styles.logDate, getTypeStyle(log.type), { fontSize }]}>{log.time}</Text>
       <View style={styles.logContents}>
         {log?.contents?.map((content, index) => {
-          if (content !== null
-            && typeof content != 'undefined'
-            && typeof content != 'string'
-            && typeof content != 'boolean'
-            && typeof content != 'number'
-            && typeof content == 'object'
+          if (content !== null && typeof content != 'undefined'
+            && typeof content != 'string' && typeof content != 'boolean'
+            && typeof content != 'number' && typeof content == 'object'
           ) return (
             <View key={`${index}`} style={{}}>
               <DevTreeView data={content} style={{ flex: 1, backgroundColor: '#33333399' }} fontSize={fontSize} />
             </View>
           )
           return (
-            <Text key={`${index}`} style={[styles.logContent, { fontSize }]}
-            >{content}</Text>
+            <Text key={`${index}`} style={[styles.logContent, { fontSize }]}>{content}</Text>
           )
         })}
       </View>
-
     </View>
   )
 }
@@ -81,19 +74,12 @@ const LogItem = ({ log, fontSize = 14 }: { log: ILog, fontSize: number }) => {
 const LogView = () => {
   const { logs, clearLogs, isStealingLog, stealConsoleLog, recoverConsoleLog, logCount, setLogCount } = React.useContext<ILogContext>(LogContext);
   const { log: [isShow, setShow] = [] } = React.useContext(ToolContext);
-
   const [fontSize, setFontSize] = useASStoredState('Log_fontsize', 14);
 
   if (!isShow) return null;
 
-
-  const fontSizeUp = () => {
-    setFontSize(prev => Math.min(24, prev + 1));
-  }
-  const fontSizeDown = () => {
-    setFontSize(prev => Math.max(7, prev - 1));
-  }
-
+  const fontSizeUp = () => setFontSize(prev => Math.min(24, prev + 1));
+  const fontSizeDown = () => setFontSize(prev => Math.max(7, prev - 1));
 
   return (
     <ResizeableView
@@ -102,9 +88,9 @@ const LogView = () => {
       renderHeaderExtra={() => (
         <View style={styles.headerExtra}>
           <Button onPress={() => {
-            if( logCount === 10 )
+            if (logCount === 10)
               setLogCount(100);
-              if( logCount === 100 )
+            if (logCount === 100)
               setLogCount(10);
           }}>{`${logCount}`}</Button>
           <Button onPress={fontSizeUp}>+</Button>

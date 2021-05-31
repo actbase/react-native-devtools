@@ -13,6 +13,7 @@ const DevTreeView = require('react-native-dev-treeview').default;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   separator: {
     height: StyleSheet.hairlineWidth,
@@ -72,7 +73,6 @@ const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {
     </View>
   )
 }
-AxiosLogDetail.barHidden = true;
 
 const colorForStatus = (status: number | undefined): string | undefined => {
   if (typeof status === 'undefined') return;
@@ -87,6 +87,7 @@ const AxiosLogItem = ({ log, push }: { log: IAxiosLog, push: Function }) => {
     <TouchableOpacity style={styles.logItem} onPress={() => {
       push({
         component: AxiosLogDetail,
+        barHidden: true,
         passProps: {
           log
         }
@@ -122,11 +123,8 @@ const AxiosLogItem = ({ log, push }: { log: IAxiosLog, push: Function }) => {
 };
 
 const AxiosLogList = (props: any) => {
-  const { setBarHidden, push } = props;
-  React.useEffect(() => {
-    setBarHidden(true);
-  }, [])
-  const { logs, } = useContext(AxiosContext);
+  const { push } = props;
+  const { logs } = useContext(AxiosContext);
   return (
     <FlatList
       style={{ flex: 1 }}
@@ -138,7 +136,7 @@ const AxiosLogList = (props: any) => {
       )}
     />
   )
-}
+};
 
 const AxoisLog = (): JSX.Element | null => {
   const { clearLogList } = useContext(AxiosContext);
@@ -164,19 +162,12 @@ const AxoisLog = (): JSX.Element | null => {
         )
       }}
     >
-      <View style={styles.container}>
-        <Scenes
-          ref={scenesRef}
-          style={{ backgroundColor: 'transparent' }}
-          route={{
-            component: AxiosLogList
-          }}
-          routeDidChange={(index: number) => {
-            console.log('routeDidChange', index);
-            setRouteIndex(index);
-          }}
-        />
-      </View>
+      <Scenes
+        ref={scenesRef}
+        style={styles.container}
+        route={{ component: AxiosLogList, barHidden: true }}
+        routeWillChange={(index: number) => setRouteIndex(index)}
+      />
     </ResizeableView>
   );
 };

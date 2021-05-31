@@ -1,7 +1,7 @@
 import React from 'react';
 import { AxiosInstance } from 'axios';
 
-import AxoisLog from './tools/AxoisLog';
+import AxoisLog from './tools/AxiosLog';
 import { AxiosContextProvider } from './context/axios/AxiosContext';
 import { ToolContextProvider } from './context/toolManager/ToolContext';
 import ToolView from './components/ToolView';

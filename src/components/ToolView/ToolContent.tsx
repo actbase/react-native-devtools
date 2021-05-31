@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffffaa',
   },
   actbase: {
     width: 50,
@@ -78,7 +78,7 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool }: Pro
         onPress={() => {
           setPosition(isRight ? PositionLeft : PositionRight);
         }}>
-        <Text allowFontScaling={false} style={styles.title}>DevTools</Text>
+        <Text allowFontScaling={false} style={styles.title}>DevTools <Text style={{fontSize:10}}>v0.0.1</Text></Text>
       </TouchableOpacity>
 
       <ScrollView style={{ flex: 1 }}>
@@ -106,9 +106,9 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool }: Pro
       </ScrollView>
       <View style={[{ paddingBottom: inset.bottom }, styles.poweredBy]}>
         <Image style={styles.actbase} source={assets.Actbase} />
-        <Text style={{}}>
+        <Text allowFontScaling={false} style={{fontSize:14}}>
           Powered By{'\n'}
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Actbase</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Actbase</Text>
         </Text>
       </View>
     </View>

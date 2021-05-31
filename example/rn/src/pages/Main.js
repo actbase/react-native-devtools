@@ -156,7 +156,7 @@ const Main = () => {
         <Text>Axios Logs Sample</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         hitSlop={{
           top: 10,
           left: 10,
@@ -174,7 +174,7 @@ const Main = () => {
           setIsClose(!isClose);
         }}
         isClose={isClose}
-      />
+      /> */}
     </View>
   );
 };

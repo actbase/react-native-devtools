@@ -1,6 +1,7 @@
 type TLogType = 'log' | 'warn' | 'error';
 interface ILog {
   id: string;
+  time : string;
   type: TLogType;
   date: Date;
   contents: any[];

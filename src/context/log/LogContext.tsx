@@ -1,7 +1,7 @@
 import React from 'react';
 import Emitter from '../../utils/Emitter';
 import { useASStoredState } from '../../utils/ASStore';
-import { generateUnique } from '../../utils/utils';
+import { dateToTimeString, generateUnique } from '../../utils/utils';
 const EVENT_LOG = '__log';
 const defaultLogContext: ILogContext = {
   logs: [],
@@ -34,15 +34,18 @@ _logContainer.consoleError = console.error;
 const _stealConsoleLog = () => {
   // backup for recover
   if (_logContainer.isStealing) return;
-  console.log('From now console log not appear this console. See your application DevTools Log');
+  // console.log('From now console log not appear this console. See your application DevTools Log');
 
   console.log = (message?: any, ...optionalParams: any[]) => {
+    _logContainer.consoleLog?.(message, ...optionalParams);
     Emitter.emit(EVENT_LOG, 'log', message, ...optionalParams);
   }
   console.warn = (message?: any, ...optionalParams: any[]) => {
+    _logContainer.consoleWarn?.(message, ...optionalParams);
     Emitter.emit(EVENT_LOG, 'warn', message, ...optionalParams);
   }
   console.error = (message?: any, ...optionalParams: any[]) => {
+    _logContainer.consoleError?.(message, ...optionalParams);
     Emitter.emit(EVENT_LOG, 'error', message, ...optionalParams);
   }
 }
@@ -57,10 +60,12 @@ const _recoverConsoleLog = () => {
 }
 
 const createLog: (type: TLogType, contents: any[]) => ILog = (type, contents) => {
+  const date = new Date();
   const log: ILog = {
     id: generateUnique(),
+    time: dateToTimeString(date),
     type,
-    date: new Date(),
+    date,
     contents,
   }
   return log;
@@ -72,18 +77,21 @@ const LogContextProvider = ({ children }: ILogContenxtProviderProps) => {
   const [logCount, setLogCount] = useASStoredState<number>('log_count', 100);
   const [isStealingLog, setIsStealingLog] = useASStoredState<boolean>('steal_log', false);
 
-  // const handleStealLog = ()=>{}
+  const handleStealLog = React.useCallback((type: TLogType, contents: any[])=>{
+    _logContainer.logs = [createLog(type, contents), ..._logContainer.logs];
+    if (_logContainer.logs.length > logCount) {
+      _logContainer.logs.splice(logCount, _logContainer.logs.length - logCount);
+    }
+    setLogs(_logContainer.logs);
+  },[logCount]);
+
   React.useEffect(() => {
     const resolver = Emitter.add(EVENT_LOG, (type: TLogType, ...contents: any[]) => {
-      _logContainer.logs = [createLog(type, contents), ..._logContainer.logs];
-      if (_logContainer.logs.length > logCount) {
-        _logContainer.logs.splice(logCount, _logContainer.logs.length - logCount);
-      }
-      setLogs(_logContainer.logs);
+      handleStealLog(type, contents)
     });
     return () => {
-      _logContainer.consoleLog('resolver run');
-      resolver();
+      const r = resolver();
+      _logContainer.consoleLog('resolver run', r);
     }
   }, [logCount]);
 

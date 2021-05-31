@@ -29,8 +29,8 @@ const TransformerButton = ({ onPress, isClose }: { onPress: Function, isClose: b
   React.useEffect(() => {
     Animated.timing(animated, {
       toValue: isClose ? 0 : 1,
-      duration: 500,
-      easing:Easing.bounce,
+      duration: 600,
+      easing:Easing.elastic(3),
       useNativeDriver: false,
     }).start();
   }, [isClose]);
