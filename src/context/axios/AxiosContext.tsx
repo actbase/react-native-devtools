@@ -74,7 +74,7 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
           return response;
         }, (error : any) => {
           linkResponse( error.response as IAxiosResponse );
-          return error;
+          return Promise.reject(error);
         })
       }
     });
