@@ -80,29 +80,28 @@ const LogView = () => {
 
   const fontSizeUp = () => setFontSize(prev => Math.min(24, prev + 1));
   const fontSizeDown = () => setFontSize(prev => Math.max(7, prev - 1));
+  const innerTools = ()=>{
+    <View style={styles.headerExtra}>
+      <Button onPress={() => {
+        setLogCount(prev => (prev + 100) % 400);
+      }}>{`${logCount}`}</Button>
+      <Button onPress={fontSizeUp}>+</Button>
+      <Button onPress={fontSizeDown}>-</Button>
+      {isStealingLog ? (
+        <Button onPress={recoverConsoleLog}>R</Button>
+      ) : (
+        <Button onPress={stealConsoleLog}>S</Button>
+      )}
+      <Button onPress={clearLogs}>C</Button>
+    </View>
+  }
 
   return (
     <ResizeableView
       title={'Log'}
       onClose={() => setShow(false)}
-      renderHeaderExtra={() => (
-        <View style={styles.headerExtra}>
-          <Button onPress={() => {
-            if (logCount === 10)
-              setLogCount(100);
-            if (logCount === 100)
-              setLogCount(10);
-          }}>{`${logCount}`}</Button>
-          <Button onPress={fontSizeUp}>+</Button>
-          <Button onPress={fontSizeDown}>-</Button>
-          {isStealingLog ? (
-            <Button onPress={recoverConsoleLog}>R</Button>
-          ) : (
-            <Button onPress={stealConsoleLog}>S</Button>
-          )}
-          <Button onPress={clearLogs}>C</Button>
-        </View>
-      )}
+      renderHeaderExtra={innerTools}
+      renderFooter={innerTools}
     >
       <FlatList
         style={styles.list}

@@ -7,6 +7,7 @@ import ResizeableView from '../components/ResizeableView';
 import { IAxiosLog } from '../context/@types/axios';
 import { ToolContext } from '../context/toolManager/ToolContext';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useASStoredState } from '../utils/ASStore';
 const Scenes = require('react-native-scenes').default;
 const DevTreeView = require('react-native-dev-treeview').default;
 
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   logStatus: {
     margin: 5,
     height: 30,
-    width: 35,
+    minWidth: 35,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -49,25 +50,32 @@ const styles = StyleSheet.create({
   headerExtra: {
     flexDirection: 'row',
   },
+  elapse: {
+    color: '#ccc',
+  }
+});
 
+const AxiosLogFontSizeContext = React.createContext<{ fontSize: number }>({
+  fontSize: 14
 });
 
 const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {
   const { } = etc;
+  const { fontSize } = React.useContext(AxiosLogFontSizeContext);
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
         <Text> - Request</Text>
         <ScrollView style={{ width: '100%' }} horizontal >
-          <DevTreeView autoExtendRoot={true} fontSize={14} data={{ ...log.config }} />
+          <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log.config }} />
         </ScrollView>
         <Text> - Response</Text>
         <ScrollView style={{ width: '100%' }} horizontal >
-          <DevTreeView autoExtendRoot={true} fontSize={14} data={{ ...log.response }} />
+          <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log.response }} />
         </ScrollView>
         <Text> - All</Text>
         <ScrollView style={{ width: '100%' }} horizontal >
-          <DevTreeView autoExtendRoot={true} fontSize={14} data={{ ...log }} />
+          <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log }} />
         </ScrollView>
       </ScrollView>
     </View>
@@ -83,6 +91,7 @@ const colorForStatus = (status: number | undefined): string | undefined => {
 }
 
 const AxiosLogItem = ({ log, push }: { log: IAxiosLog, push: Function }) => {
+  const { fontSize } = React.useContext(AxiosLogFontSizeContext);
   return (
     <TouchableOpacity style={styles.logItem} onPress={() => {
       push({
@@ -96,25 +105,24 @@ const AxiosLogItem = ({ log, push }: { log: IAxiosLog, push: Function }) => {
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {log.response ? (
           <View style={[styles.logStatus, { backgroundColor: colorForStatus(log.status) }]}>
-            {<Text style={styles.log} allowFontScaling={false} >{log?.method?.toUpperCase?.()}</Text>}
-            <Text style={styles.log} allowFontScaling={false}>{log.status}</Text>
+            {<Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false} >{log?.method?.toUpperCase?.()}</Text>}
+            <Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false}>{log.status}</Text>
           </View>
         ) : (
-          <View style={styles.logStatus}>
-            {<Text style={styles.log} allowFontScaling={false}>{log?.method?.toUpperCase?.()}</Text>}
+          <View style={[styles.logStatus, { borderRadius: 0, }]}>
+            {<Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false}>{log?.method?.toUpperCase?.()}</Text>}
             <ActivityIndicator size="small" color="white" />
           </View>
         )}
       </View>
       <View style={{ justifyContent: 'center' }}>
-
-        <Text style={styles.log} selectable={true}>
+        <Text style={[styles.log, { fontSize }]} selectable={true}>
           {log.config.url}
+          <Text style={[styles.elapse, { fontSize }, log.elapse > 1000 && { color: '#c00' }]} selectable={true}>
+            {' '}{log.elapse}ms
+          </Text>
         </Text>
-        <Text style={styles.log} selectable={true}>
-          {log.elapse}ms
-        </Text>
-        <Text style={[styles.query,]} selectable={true}>
+        <Text style={[styles.query, { fontSize }]} selectable={true}>
           {JSON.stringify(log?.config?.params)}
         </Text>
       </View>
@@ -143,8 +151,27 @@ const AxoisLog = (): JSX.Element | null => {
   const { axiosLog: [isShow, setShow] = [] } = useContext(ToolContext);
   const scenesRef = React.useRef<any>();
   const [routeIndex, setRouteIndex] = React.useState<number>(0);
+  const [fontSize, setFontSize] = useASStoredState('axios_log_fontSize', 14);
+  const [logCount, setLogCount] = useASStoredState('axios_log_count', 500);
 
   if (!isShow) return null;
+  const { logs } = useContext(AxiosContext);
+
+  const fontSizeUp = () => setFontSize(prev => Math.min(24, prev + 1));
+  const fontSizeDown = () => setFontSize(prev => Math.max(7, prev - 1));
+  const innerTools = (extra: any) => {
+    return (
+      <View style={styles.headerExtra}>
+        <Button onPress={fontSizeUp}>+</Button>
+        <Button onPress={fontSizeDown}>-</Button>
+        <Button onPress={() => {
+          setLogCount(prev => (prev + 100) % 600);
+        }}>{`${logCount}`}</Button>
+        <Button onPress={clearLogList}>C</Button>
+        {extra}
+      </View>
+    )
+  }
 
   return (
     <ResizeableView
@@ -154,21 +181,24 @@ const AxoisLog = (): JSX.Element | null => {
         scenesRef.current?.pop?.();
       }}
       isClose={routeIndex == 0}
-      renderHeaderExtra={() => {
-        return (
-          <View style={styles.headerExtra}>
-            <Button onPress={clearLogList}>C</Button>
+      renderHeaderExtra={innerTools}
+      renderFooter={() => {
+        return innerTools(
+          <View style={{ justifyContent: 'center', paddingHorizontal:3 }}>
+            <Text style={{ fontSize, color: 'white' }}>{logs.length} logs</Text>
           </View>
         )
       }}
     >
-      <Scenes
-        ref={scenesRef}
-        style={styles.container}
-        route={{ component: AxiosLogList, barHidden: true }}
-        routeWillChange={(index: number) => setRouteIndex(index)}
-      />
-    </ResizeableView>
+      <AxiosLogFontSizeContext.Provider value={{ fontSize }}>
+        <Scenes
+          ref={scenesRef}
+          style={styles.container}
+          route={{ component: AxiosLogList, barHidden: true }}
+          routeWillChange={(index: number) => setRouteIndex(index)}
+        />
+      </AxiosLogFontSizeContext.Provider>
+    </ResizeableView >
   );
 };
 

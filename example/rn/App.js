@@ -24,7 +24,9 @@ const App = () => {
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <AppContainer 
         />
-        <DevTools axiosInstances={[restApi]} />
+        <DevTools 
+          axiosInstances={[restApi]}
+        />
       </View>
     </>
   );

@@ -38,32 +38,25 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   resizeHandleInner: {
     position: 'absolute',
-    width: 0,
-    height: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 0,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderBottomWidth: 30,
-    borderLeftWidth: 30,
-    borderBottomColor: '#ffffff88',
+    width: 15,
+    height: 2,
+    borderRadius: 1,
+    transform:[{rotate:'-45deg'},{translateY:-2.5}],
+    backgroundColor: 'white',
+
   },
   resizeHandleInner2: {
-    position: 'absolute',
-    width: 0,
-    height: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderBottomWidth: 15,
-    borderLeftWidth: 15,
-    borderBottomColor: '#ffffff88',
+    position: 'absolute', 
+    width: 15,
+    height: 2,
+    borderRadius: 1,
+    transform:[{rotate:'-45deg'},{translateY:2.5}],
+    backgroundColor: 'white',
   },
 });
 
@@ -124,7 +117,7 @@ const ResizeableView = ({
       </View>
       {/* ResizeHandle */}
       <View style={styles.resizeHandle} {...resize.responder}>
-        {/* <View style={styles.resizeHandleInner} /> */}
+        <View style={styles.resizeHandleInner} />
         <View style={styles.resizeHandleInner2} />
       </View>
     </Animated.View>

@@ -21,27 +21,30 @@ const AxiosContext = createContext(defaultAxiosContext);
 const __logs: Array<IAxiosLog> = [];
 
 const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProviderProps) => {
-  const [logs, setLogs] = React.useState<Array<IAxiosLog>>(__logs);
+  const [logs, setLogs] = React.useState<Array<IAxiosLog>>([...__logs]);
   const clearLogList = () => {
+    __logs.splice(0, Number.MAX_SAFE_INTEGER);
     setLogs([]);
   };
+  
   const createLog = (config: IAxiosRequestConfig) => {
     config.uid = generateUnique();
     console.log('devTools::request', config.uid);
     const log: IAxiosLog = {
-      uid:config.uid,
+      uid: config.uid,
       time: Date.now(),
       config,
+      elapse: -1,
       method: config?.method,
     };
     __logs.unshift(log);
-    setLogs(__logs);
+    setLogs([...__logs]);
   };
 
   const linkResponse = (response: IAxiosResponse) => {
     console.log('',);
     const log = __logs.find((log) => log.uid === response?.config.uid);
-    console.log('devTools::response', log?.uid );
+    console.log('devTools::response', log?.uid);
     if (log) {
       log.isError = false;
       log.elapse = Date.now() - log.time;
@@ -59,10 +62,10 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
         interceptorId: instance.interceptors.request.use((config: AxiosRequestConfig) => {
           createLog(config as IAxiosRequestConfig);
           return config
-        }, (error : any) => {
-          console.log(error);
-          return error
+        }, (error: any) => {
           // TODO : implement cancel token 
+          console.log('cancel', error);
+          return error
         })
       }
     });
@@ -72,8 +75,9 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
         interceptorId: instance.interceptors.response.use((response: AxiosResponse) => {
           linkResponse(response as IAxiosResponse);
           return response;
-        }, (error : any) => {
-          linkResponse( error.response as IAxiosResponse );
+        }, (error: any) => {
+          console.log(error);
+          linkResponse(error.response as IAxiosResponse);
           return Promise.reject(error);
         })
       }
@@ -91,10 +95,7 @@ const AxiosContextProvider = ({ children, axiosInstances }: AxiosContenxtProvide
 
   return (
     <AxiosContext.Provider
-      value={{
-        logs,
-        clearLogList,
-      }}>
+      value={{ logs, clearLogList }}>
       {children}
     </AxiosContext.Provider>
   );

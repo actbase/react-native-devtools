@@ -15,7 +15,7 @@ interface IAxiosLog {
   config: IAxiosRequestConfig;
 
   isError?: boolean;
-  elapse?: number;
+  elapse: number;
   status?: number | undefined;
   response?: IAxiosResponse;
 }

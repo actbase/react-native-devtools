@@ -36,19 +36,26 @@ const AxiosLogSample = () => {
     });
   };
   const callErrorAPI = async () => {
-    await restApi.put('test1/test', {
-      param1: 'param1',
-    });
+    try {
+      await restApi.put('test1/test', {
+        param1: 'param1',
+      });
+    } catch (e) {
+      console.warn('handing error', e);
+    }
   };
   const callAndCancelAPI = async () => {
-    const source = axios.CancelToken.source();
-    const t = setTimeout(()=>{
-      clearTimeout( t );
-      source.cancel();
-    }, 100);
-    const r = await restApi.get('test/test',{cancelToken:source.token});
-    console.log( r );
-    
+    try {
+      const source = axios.CancelToken.source();
+      const t = setTimeout(() => {
+        clearTimeout(t);
+        source.cancel();
+      }, 100);
+      const r = await restApi.get('test/test', { cancelToken: source.token });
+      console.log(r);
+    } catch (e) {
+      console.warn(e, e.response);
+    }
   };
   return (
     <View style={styles.container}>
