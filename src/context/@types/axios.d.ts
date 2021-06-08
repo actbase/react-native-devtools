@@ -27,7 +27,7 @@ interface IAxiosLogContext {
 
 interface AxiosContenxtProviderProps {
   children: JSX.Element | Array<JSX.Element>;
-  axiosInstances: Array<AxiosInstance>;
+  axiosInstances: AxiosInstance[];
 }
 
 interface IAxiosInterceptor {

@@ -10,7 +10,7 @@ import {
 
 import DeviceInfo from 'react-native-device-info';
 import { getByteSizeAdjust } from '../utils/utils';
-import ToolButton from '../components/ToolButton';
+import ToolButton from '../components/ToolView/ToolButton';
 // const DevTreeView = require('react-native-dev-treeview').default;
 const InfoRowHeight = 26;
 

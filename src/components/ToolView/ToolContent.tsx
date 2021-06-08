@@ -13,7 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ToolContext } from '../../context/toolManager/ToolContext';
 import { setEnableDevTool } from '../../context/devToolEmitter/devToolEmitter';
 import assets from '../../assets';
-import ToolButton from '../ToolButton';
+import ToolButton from './ToolButton';
+import ToolSection from './ToolSection';
 import DeviceInfoView from '../../tools/DeviceInfoView';
 import { PositionLeft, PositionRight } from '../../commons/defines';
 const RNRestart = require('react-native-restart').default;
@@ -47,14 +48,9 @@ const styles = StyleSheet.create({
     marginRight: 20,
   }
 });
-interface Props {
-  backgroundColor?: string;
-  position: string;
-  setPosition: Function,
-  toggleTool: Function
-}
 
-const ToolContent = ({ position, setPosition, backgroundColor, toggleTool }: Props) => {
+
+const ToolContent = ({ position, setPosition, backgroundColor, toggleTool, extensions }: IToolContent) => {
   const inset = useSafeAreaInsets();
   const {
     axiosLog: [isShowAxiosLog, setShowAxiosLog] = [],
@@ -78,7 +74,7 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool }: Pro
         onPress={() => {
           setPosition(isRight ? PositionLeft : PositionRight);
         }}>
-        <Text allowFontScaling={false} style={styles.title}>DevTools <Text style={{fontSize:10}}>v0.0.1</Text></Text>
+        <Text allowFontScaling={false} style={styles.title}>DevTools <Text style={{ fontSize: 10 }}>v0.0.1</Text></Text>
       </TouchableOpacity>
 
       <ScrollView style={{ flex: 1 }}>
@@ -103,10 +99,25 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool }: Pro
         <ToolButton onPress={() => { setEnableDevTool(false) }} isLast>
           Disable DevTool
         </ToolButton>
+
+        {extensions.length > 0 && (
+          <ToolSection title={'Extensions'} />
+        )}
+
+        {extensions?.map(({ label, action }, index) => {
+          return (
+            <ToolButton
+              key={index}
+              onPress={() => action()}
+              isLast={extensions.length - 1 === index}>
+              {label}
+            </ToolButton>
+          )
+        })}
       </ScrollView>
       <View style={[{ paddingBottom: inset.bottom }, styles.poweredBy]}>
         <Image style={styles.actbase} source={assets.Actbase} />
-        <Text allowFontScaling={false} style={{fontSize:14}}>
+        <Text allowFontScaling={false} style={{ fontSize: 14 }}>
           Powered By{'\n'}
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Actbase</Text>
         </Text>
