@@ -22,10 +22,15 @@ const App = () => {
     <>
       <View style={{ flex: 1 }}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <AppContainer 
-        />
-        <DevTools 
+        <AppContainer />
+        <DevTools
           axiosInstances={[restApi]}
+          extensions={[
+            {
+              label: 'CodePush : ',
+              action: () => {},
+            },
+          ]}
         />
       </View>
     </>

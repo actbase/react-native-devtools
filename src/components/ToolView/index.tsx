@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ToolHandle from './ToolHandle';
 import ToolContent from './ToolContent';
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ToolView = ({ }) => {
+const ToolView = ({ extensions = [] } : IToolViewProps) => {
   const [isShow, setIsShow] = React.useState(false);
   // const [isShowContent, setIsShowContent] = React.useState(false);
   const [opacity, setOpacity] = React.useState(0x40);
@@ -86,6 +87,7 @@ const ToolView = ({ }) => {
             toggleTool={() => {
               handleTouch();
             }}
+            extensions={extensions}
           />
         </SafeAreaProvider>
       </Animated.View>
