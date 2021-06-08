@@ -10,14 +10,25 @@ import React from 'react';
 import { SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import DevTools from '@actbase/react-native-devtools';
+import DevTools, { Segment, useASStoredState } from '@actbase/react-native-devtools';
 import { restApi } from './src/pages/AxiosLogSample';
 
 import AppContainer from './src/nav/AppContainer';
 
+const DeploymentItems = [
+  { label: 'Product', value: 'production' },
+  { label: 'Staging', value: 'staging' },
+  { label: 'Develop', value: 'dev' },
+];
+const APIServerItems = [
+  { label: 'Product', value: 'production' },
+  { label: 'Staging', value: 'staging' },
+  { label: 'Develop', value: 'dev' },
+];
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [deployment, setDeployment] = useASStoredState('code-push-deployment', 'staging');
+  const [apiServer, setAPIServer] = useASStoredState('api-server', 'production');
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -27,8 +38,34 @@ const App = () => {
           axiosInstances={[restApi]}
           extensions={[
             {
-              label: 'CodePush : ',
+              label: 'CodePush',
               action: () => {},
+              render: () => {
+                return (
+                  <Segment
+                    items={DeploymentItems}
+                    value={deployment}
+                    onPress={item => {
+                      setDeployment(item.value);
+                    }}
+                  />
+                );
+              },
+            },
+            {
+              label: 'API Server',
+              action: () => {},
+              render: () => {
+                return (
+                  <Segment
+                    items={APIServerItems}
+                    value={apiServer}
+                    onPress={item => {
+                      setAPIServer(item.value);
+                    }}
+                  />
+                );
+              },
             },
           ]}
         />

@@ -104,14 +104,23 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool, exten
           <ToolSection title={'Extensions'} />
         )}
 
-        {extensions?.map(({ label, action }, index) => {
+        {extensions?.map(({ label, action, render }, index) => {
           return (
-            <ToolButton
-              key={index}
-              onPress={() => action()}
-              isLast={extensions.length - 1 === index}>
-              {label}
-            </ToolButton>
+            <>
+              {label && (
+                <ToolButton
+                  key={`tool-button-${index}`}
+                  onPress={() => action()}
+                  isLast={extensions.length - 1 === index}>
+                  {label}
+                </ToolButton>
+              )}
+              {render && (
+                <View style={{ paddingHorizontal: 10, alignSelf: 'stretch', paddingVertical: 5 }}>
+                  {render?.()}
+                </View>
+              )}
+            </>
           )
         })}
       </ScrollView>

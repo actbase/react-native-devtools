@@ -1,6 +1,7 @@
 interface IDevToolExtension {
   label: string;
   action: Function;
+  render?: ()=>JSX.Element;
 }
 
 interface IToolContent {

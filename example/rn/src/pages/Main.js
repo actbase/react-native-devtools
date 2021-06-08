@@ -4,7 +4,7 @@ import { setEnableDevTool, addDevToolEnableListener } from '@actbase/react-nativ
 import { useNavigation } from '@react-navigation/core';
 import common_styles from '../commons/styles';
 
-import DevTools from '@actbase/react-native-devtools';
+import DevTools,{Segment} from '@actbase/react-native-devtools';
 import { Animated } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -72,9 +72,7 @@ const TransformerButton = ({ onPress, isClose }) => {
         bottom: 10,
       }}
       style={[styles.button, { backgroundColor: 'red' }]}
-      onPress={() => {
-        onPress();
-      }}
+      onPress={() => onPress()}
     >
       <Animated.View
         style={[
@@ -102,6 +100,7 @@ const Main = () => {
   const navigation = useNavigation();
   const [isEnabledDevTool, setIsEnableDevTool] = React.useState();
   const [isClose, setIsClose] = React.useState(true);
+  const [deployment, setDeployment] = React.useState('staging');
 
   React.useEffect(() => {
     setEnableDevTool(isEnabledDevTool);
@@ -142,11 +141,25 @@ const Main = () => {
       <TouchableOpacity
         style={common_styles.button}
         onPress={() => {
-          console.error('error', { a: { b: 'c' } } ,{ a: { b: 'c' }} );
+          console.error('error', { a: { b: 'c' } }, { a: { b: 'c' } });
         }}
       >
         <Text>console.error</Text>
       </TouchableOpacity>
+
+      <View style={{ paddingHorizontal: 20, alignSelf:'stretch', marginBottom:10 }}>
+        <Segment
+          items={[
+            { label: 'Production', value: 'production' },
+            { label: 'Staging', value: 'staging' },
+            { label: 'Dev', value: 'dev' },
+          ]}
+          value={deployment}
+          onPress={(item) => {
+            setDeployment(item.value);
+          }}
+        />
+      </View>
 
       <TouchableOpacity style={common_styles.button} onPress={handlePress}>
         <Text>{isEnabledDevTool ? 'Hide' : 'Show'} DevTools</Text>
