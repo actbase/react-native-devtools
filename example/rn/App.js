@@ -16,9 +16,8 @@ import { restApi } from './src/pages/AxiosLogSample';
 import AppContainer from './src/nav/AppContainer';
 
 const DeploymentItems = [
-  { label: 'Product', value: 'production' },
+  { label: 'Production', value: 'productionion' },
   { label: 'Staging', value: 'staging' },
-  { label: 'Develop', value: 'dev' },
 ];
 const APIServerItems = [
   { label: 'Product', value: 'production' },
