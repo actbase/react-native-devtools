@@ -11,12 +11,16 @@ import {
 } from '@react-navigation/native';
 import Main from '../pages/Main';
 import AxiosLogSample from '../pages/AxiosLogSample';
+import {setNavigationContainer} from '@actbase/react-native-devtools'
 
 const AppContainer = () => {
   const Stack = React.useMemo(() => createStackNavigator(), []);
   const navRef = React.useRef();
 
+  // setNavigationContainer( navRef );
+
   // console.log(navRef);
+  
 
   return (
     <NavigationContainer
