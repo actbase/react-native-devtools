@@ -1,4 +1,4 @@
-import React, { createContext, MutableRefObject } from 'react';
+import React, { createContext } from 'react';
 
 const defaultToolContext: IDevTool = {
   axiosLog: undefined,
