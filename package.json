@@ -58,7 +58,11 @@
     "devtools",
     "react-native-devtools"
   ],
-  "author": "Actbase",
+  "author": {
+    "name": "Actbase LLC",
+    "email": "project@actbase.io",
+    "url": "https://da.actbase.io"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/actbase/react-native-devtools/issues"
