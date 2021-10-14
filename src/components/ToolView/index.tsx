@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ToolButton from './ToolHandle';
 import ToolHandle from './ToolHandle';
 import ToolContent from './ToolContent';
 import { PositionRight } from '../../commons/defines';
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ToolView = ({ extensions = [] } : IToolViewProps) => {
+const ToolView = ({ extensions = [] }: IToolViewProps) => {
   const [isShow, setIsShow] = React.useState(false);
   // const [isShowContent, setIsShowContent] = React.useState(false);
   const [opacity, setOpacity] = React.useState(0x40);
@@ -96,3 +97,6 @@ const ToolView = ({ extensions = [] } : IToolViewProps) => {
 }
 
 export default ToolView;
+export {
+  ToolButton,
+}
