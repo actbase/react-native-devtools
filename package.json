@@ -1,6 +1,6 @@
 {
   "name": "@actbase/react-native-devtools",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React & React native dev tools.",
   "main": "lib/index.js",
   "module": "lib/index.js",

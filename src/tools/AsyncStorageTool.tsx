@@ -73,6 +73,7 @@ const AsyncStorageToolView = ({ fontSize }: { fontSize: number }) => {
         }, {}));
       })
   }, []);
+  
   if (!data) return null;
   return (
     <ScrollView style={{ flex: 1 }}>

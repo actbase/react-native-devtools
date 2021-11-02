@@ -55,7 +55,7 @@ const ToolView = ({ extensions = [] }: IToolViewProps) => {
     });
   }, [isShow]);
 
-  React.useEffect(() => setOpacity(0x80), []);
+  React.useEffect(() => { setOpacity(0x80) }, []);
 
   return (
     <>

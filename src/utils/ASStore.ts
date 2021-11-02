@@ -34,7 +34,9 @@ export function useASStoredState<S>(
   initialState: S | (() => S),
 ): [S, React.Dispatch<React.SetStateAction<S>>] {
   const [state, setState] = React.useState<S>(ASStore.get(key) || initialState);
-  React.useEffect(() => ASStore.set(key, state), [state]);
+  React.useEffect(() => {
+    ASStore.set(key, state);
+  }, [state]);
   return [state, setState];
 }
 
