@@ -17,9 +17,8 @@ const styles = StyleSheet.create({
   },
   buttonBar: {
     position: 'absolute',
-    height: 2,
-    borderRadius: 2,
-    backgroundColor: 'white',
+    height: 1,
+    backgroundColor: '#333',
   },
 });
 
@@ -30,7 +29,7 @@ const TransformerButton = ({ onPress, isClose }: { onPress: Function, isClose: b
     Animated.timing(animated, {
       toValue: isClose ? 0 : 1,
       duration: 600,
-      easing:Easing.elastic(3),
+      easing: Easing.elastic(3),
       useNativeDriver: false,
     }).start();
   }, [isClose]);
@@ -62,8 +61,8 @@ const TransformerButton = ({ onPress, isClose }: { onPress: Function, isClose: b
           {
             width,
             transform: [
-              { rotate: rotate1 }, 
-              { translateX: translateX1 }, 
+              { rotate: rotate1 },
+              { translateX: translateX1 },
               { translateY: translateY1 }
             ],
           },

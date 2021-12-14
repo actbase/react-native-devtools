@@ -7,8 +7,8 @@ import {
 
 import ASGesutreResponder from '../useASGesutreResponder';
 
-const HandleWidth = 20;
-const HandleHeight = 40;
+// const HandleWidth = 20;
+const HandleHeight = 35;
 
 const styles = StyleSheet.create({
   handle: {
@@ -16,28 +16,49 @@ const styles = StyleSheet.create({
     top: '50%',
     marginTop: -HandleHeight / 2,
     height: HandleHeight,
-    width: HandleWidth,
-    zIndex: 2,
-    paddingHorizontal: 2,
+    width: 15,
+    zIndex: Number.MAX_SAFE_INTEGER - 1,
+    overflow: 'hidden',
+    // shadowOffset: {
+    //   width: -2, height: -2
+    // },
+    // shadowColor: 'black',
+    // shadowRadius: 5,
+    // shadowOpacity: 0.2,
+  },
+  handleRight: {
+    right: 0,
+    // borderRadius: HandleHeight / 2,
+    // borderTopLeftRadius: HandleHeight / 2,
+    // borderBottomLeftRadius: HandleHeight / 2,
+  },
+  handleLeft: {
+    left: 0,
+    // borderRadius: HandleHeight / 2,
+    // borderTopRightRadius: HandleHeight / 2,
+    // borderBottomRightRadius: HandleHeight / 2,
+  },
+  handleInner: {
+    width: HandleHeight,
+    height: HandleHeight,
+    borderRadius: HandleHeight / 2,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
-  handleRight: {
-    right: 0,
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
+  handleInnerRight: {
+    paddingRight: 21.5,
+    paddingLeft: 7
   },
-  handleLeft: {
-    left: 0,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
+  handleInnerLeft: {
+    paddingLeft: 21.5,
+    paddingRight: 7,
   },
   handleBar: {
-    height: HandleHeight - 20,
-    width: 3,
-    borderRadius: 3 / 2,
-    backgroundColor: '#000',
+    height: 13,
+    width: 2,
+    borderRadius: 1,
+    backgroundColor: '#eaeaea',
   },
 });
 
@@ -64,12 +85,14 @@ const ToolHandle = ({
         styles.handle,
         isRight ? styles.handleRight : styles.handleLeft,
         { transform: [{ translateY: handle.pan.y }, { translateX }] },
-        { backgroundColor },
+        ,
       ]}
       {...handle.responder}
     >
-      <View style={styles.handleBar} />
-      <View style={styles.handleBar} />
+      <View style={[styles.handleInner, isRight ? styles.handleInnerRight : styles.handleInnerLeft, { backgroundColor }, { backgroundColor: 'white' }]}>
+        <View style={styles.handleBar} />
+        <View style={styles.handleBar} />
+      </View>
     </Animated.View >
   )
 }

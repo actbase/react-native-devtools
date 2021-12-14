@@ -59,21 +59,22 @@ const AsyncStorageToolView = ({ fontSize }: { fontSize: number }) => {
       .then((data) => {
         setData(data.reduce((p, [k, v]) => {
           if (!v) return { ...p, [k]: v };
-          return { ...p, [k]: JSON.parse(v) };
+          // return { ...p, [k]: JSON.parse(v) };
           // console.log( k, v, JSON.parse( v ));
-          // try {
-          //   return ({ ...p, [k]: JSON.parse(v) });
-          // }
-          // catch (e) {
-          //   return ({ ...p, [k]: v })
-          // }
-          // finally {
-          //   return ({ ...p, [k]: v })
-          // }
+          let parsed = v;
+          try {
+            parsed = JSON.parse(v);
+          }
+          catch (e) {
+            parsed = v;
+          }
+          finally {
+            return ({ ...p, [k]: parsed })
+          }
         }, {}));
       })
   }, []);
-  
+
   if (!data) return null;
   return (
     <ScrollView style={{ flex: 1 }}>

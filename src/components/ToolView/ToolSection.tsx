@@ -7,23 +7,26 @@ import {
 
 const styles = StyleSheet.create({
   tool: {
+    borderLeftColor: '#eee',
+    borderLeftWidth: 5,
+    paddingLeft: 11,
     height: 44,
-    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    backgroundColor: '#fafafa'
   },
   toolSection: {
-    fontSize:16,
-    fontWeight:'bold',
-    color: 'white',
-    textDecorationColor:'white',
-    textDecorationLine:'underline',
-    textDecorationStyle:'solid',
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#666',
+    textDecorationColor: 'white',
+    textDecorationLine: 'underline',
+    textDecorationStyle: 'solid',
   },
 });
 
 interface IToolSectionProps {
-  title:string, 
+  title: string,
   renderBeforeChildren?: () => JSX.Element;
   renderAfterChildren?: () => JSX.Element;
 }

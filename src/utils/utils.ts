@@ -36,3 +36,4 @@ export const zf = (value: number | string, length: number = 2, fill: string = '0
 export const dateToTimeString: (date: Date) => string = (date: Date) => {
   return `${zf(date.getHours())}:${zf(date.getMinutes())}:${zf(date.getSeconds())}.${zf(date.getMilliseconds(), 3)}`;
 };
+

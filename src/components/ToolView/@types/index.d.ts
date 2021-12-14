@@ -1,7 +1,7 @@
 interface IDevToolExtension {
   label: string;
   action: Function;
-  render?: ()=>JSX.Element;
+  render?: () => JSX.Element;
 }
 
 interface IToolContent {
@@ -20,4 +20,13 @@ interface IDevToolsProps {
 
 interface IToolViewProps {
   extensions: IDevToolExtension[];
+  isOpen: boolean;
+  onChangeOpen: Function;
+}
+
+interface IToolViewRef extends Ref {
+  current: {
+    show: Function;
+    hide: Function;
+  };
 }

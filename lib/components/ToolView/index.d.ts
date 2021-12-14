@@ -1,3 +1,5 @@
 /// <reference types="react" />
-declare const ToolView: ({ extensions }: IToolViewProps) => JSX.Element;
+import ToolButton from './ToolHandle';
+declare const ToolView: ({ extensions, isOpen, onChangeOpen }: IToolViewProps) => JSX.Element;
 export default ToolView;
+export { ToolButton, };

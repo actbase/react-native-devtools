@@ -9,32 +9,33 @@ import {
 const styles = StyleSheet.create({
   tool: {
     height: 44,
-    backgroundColor: '#00000099',
-    justifyContent: 'center',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
     flexDirection: 'row',
+    paddingHorizontal: 16,
   },
-  toolNoLine: {
-    borderBottomWidth: 0,
+  toolEven: {
+    backgroundColor: '#fafafa',
   },
   toolCaption: {
-    color: 'white',
+    flex: 1,
+    fontSize: 10,
+    letterSpacing: - 0.4,
+    color: '#666',
   },
 });
 
 interface IToolButtonProps {
   children?: any;
   onPress: (event: GestureResponderEvent) => void;
-  isLast?: boolean;
   renderBeforeChildren?: () => JSX.Element;
   renderAfterChildren?: () => JSX.Element;
+  even?: boolean;
 }
 
-const ToolButton = ({ children, onPress, isLast, renderBeforeChildren, renderAfterChildren }: IToolButtonProps) => {
+const ToolButton = ({ children, even, onPress, renderBeforeChildren, renderAfterChildren }: IToolButtonProps) => {
   return (
-    <TouchableOpacity style={isLast ? [styles.tool, styles.toolNoLine] : styles.tool} onPress={onPress}>
+    <TouchableOpacity style={[styles.tool, even && styles.toolEven]} onPress={onPress}>
       {renderBeforeChildren?.()}
       {!!children && (
         <Text allowFontScaling={false} style={styles.toolCaption}>{children}</Text>

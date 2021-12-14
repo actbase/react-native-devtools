@@ -19,14 +19,14 @@ interface ISgementProps {
 
 const styles = StyleSheet.create({
   segment: {
-    height: 40,
+    height: 35,
     alignSelf: 'stretch',
     flexDirection: 'row',
-    borderRadius: 10,
-    backgroundColor: '#ccc',
+    borderRadius: 35 / 2,
+    backgroundColor: '#eee',
     overflow: 'hidden',
-    borderColor: '#66666688',
-    borderWidth: 1,
+    // borderColor: '#66666688',
+    // borderWidth: 1,
   },
   element: {
     flex: 1,
@@ -34,18 +34,18 @@ const styles = StyleSheet.create({
   },
   elementSelected: {
     flex: 1,
-    backgroundColor: '#ffffff88',
+    backgroundColor: '#333',
     justifyContent: 'center',
-    borderRadius:10,
+    // borderRadius: 10,
   },
   text: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 8,
+    color: '#999',
     textAlign: 'center',
   },
   textSelected: {
-    fontSize: 12,
-    color: 'black',
+    fontSize: 8,
+    color: '#fff',
     textAlign: 'center',
   },
 })
@@ -61,7 +61,7 @@ const Segment = ({ items, onPress, value }: ISgementProps) => {
             key={index}
             onPress={() => onPress(item)}
           >
-            <Text allowFontScaling={false} style={isSelected ? styles.textSelected : styles.text}>{item.label}</Text>
+            <Text allowFontScaling={false} style={isSelected ? styles.textSelected : styles.text}>{item?.label?.toUpperCase?.()}</Text>
           </TouchableOpacity>
         )
       })}

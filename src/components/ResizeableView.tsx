@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     top: 0,
     minWidth: 200,
     minHeight: 100,
-    backgroundColor: '#00000099',
+    backgroundColor: '#ffffff99',
     justifyContent: 'space-between',
     borderRadius: 5,
     overflow: 'hidden',
@@ -29,8 +29,9 @@ const styles = StyleSheet.create({
     height: 30,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#000000',
+    backgroundColor: '#fafafa',
   },
+  title: { color: '#666', fontWeight: 'bold', letterSpacing: -0.5 },
   resizeHandle: {
     position: 'absolute',
     bottom: 0,
@@ -46,17 +47,17 @@ const styles = StyleSheet.create({
     width: 15,
     height: 2,
     borderRadius: 1,
-    transform:[{rotate:'-45deg'},{translateY:-2.5}],
-    backgroundColor: 'white',
+    transform: [{ rotate: '-45deg' }, { translateY: -2.5 }],
+    backgroundColor: '#ccc',
 
   },
   resizeHandleInner2: {
-    position: 'absolute', 
+    position: 'absolute',
     width: 15,
     height: 2,
     borderRadius: 1,
-    transform:[{rotate:'-45deg'},{translateY:2.5}],
-    backgroundColor: 'white',
+    transform: [{ rotate: '-45deg' }, { translateY: 2.5 }],
+    backgroundColor: '#ccc',
   },
 });
 
@@ -103,7 +104,7 @@ const ResizeableView = ({
         />
 
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text style={{ color: 'white', fontWeight: 'bold' }}>
+          <Text style={styles.title}>
             {title}
           </Text>
         </View>

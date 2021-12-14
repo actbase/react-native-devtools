@@ -10,18 +10,18 @@ interface Props {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#666',
-    borderRadius: 3,
+    backgroundColor: '#fff',
+    borderRadius: 25,
     minHeight: 25,
     minWidth: 25,
-    margin:2,
+    margin: 2,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
   },
   textStyle: {
-    fontSize: 12,
-    color: 'white',
+    fontSize: 8,
+    color: '#000',
   }
 })
 

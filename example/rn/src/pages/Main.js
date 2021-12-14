@@ -4,12 +4,14 @@ import { setEnableDevTool, addDevToolEnableListener } from '@actbase/react-nativ
 import { useNavigation } from '@react-navigation/core';
 import common_styles from '../commons/styles';
 
-import DevTools,{Segment} from '@actbase/react-native-devtools';
+import DevTools, { Segment } from '@actbase/react-native-devtools';
 import { Animated } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -43,6 +45,36 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '45deg' }, { translateX: 2 }, { translateY: 2 }],
   },
 });
+
+const ClearIconView = ({ color = 'black' }) => {
+  return (
+    <View
+      style={{
+        width: 9,
+        height: 9,
+        borderBottomColor: color,
+        borderBottomWidth: 0.5,
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <View
+        style={{
+          width: 6,
+          height: 7,
+          borderRadius: 1.5,
+          borderWidth: 0.5,
+          borderColor: color,
+          position: 'absolute',
+          transform: [{ translateX: 1 }, { rotate: '45deg' }, { translateY: 1.5 }],
+        }}
+      >
+        <View style={{ width: 5, height: 0.75, backgroundColor: color, marginTop: 3.5 }} />
+      </View>
+    </View>
+  );
+};
 
 const TransformerButton = ({ onPress, isClose }) => {
   const animated = React.useRef(new Animated.Value(0)).current;
@@ -147,7 +179,7 @@ const Main = () => {
         <Text>console.error</Text>
       </TouchableOpacity>
 
-      <View style={{ paddingHorizontal: 20, alignSelf:'stretch', marginBottom:10 }}>
+      <View style={{ paddingHorizontal: 20, alignSelf: 'stretch', marginBottom: 10 }}>
         <Segment
           items={[
             { label: 'Production', value: 'production' },
@@ -155,7 +187,7 @@ const Main = () => {
             { label: 'Dev', value: 'dev' },
           ]}
           value={deployment}
-          onPress={(item) => {
+          onPress={item => {
             setDeployment(item.value);
           }}
         />
@@ -168,6 +200,13 @@ const Main = () => {
       <TouchableOpacity style={common_styles.button} onPress={() => navigation.navigate('AxiosLogSample')}>
         <Text>Axios Logs Sample</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={common_styles.button} onPress={() => AsyncStorage.setItem('firstDepthItem', 'asdf')}>
+        <Text>Test AsyncStorage Bug</Text>
+      </TouchableOpacity>
+      <View style={{ transform: [{ scale: 10 }] }}>
+        <ClearIconView />
+      </View>
 
       {/* <TouchableOpacity
         hitSlop={{

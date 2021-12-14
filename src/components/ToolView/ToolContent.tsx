@@ -2,17 +2,16 @@ import React from 'react';
 import {
   View,
   Text,
+  Linking,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ToolContext } from '../../context/toolManager/ToolContext';
 import { setEnableDevTool } from '../../context/devToolEmitter/devToolEmitter';
-import assets from '../../assets';
 import ToolButton from './ToolButton';
 import ToolSection from './ToolSection';
 import DeviceInfoView from '../../tools/DeviceInfoView';
@@ -24,29 +23,45 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
   },
   title: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: '600',
-    color: 'white',
-    textAlign: 'center',
+    color: '#333',
+    // textAlign: 'center',
+    letterSpacing: -0.6,
+  },
+  company: {
+    fontSize: 8,
+    color: '#999',
+    letterSpacing: -0.4,
   },
 
-  poweredBy: {
+  copyright: {
+    paddingHorizontal: 16,
     paddingVertical: 10,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffffaa',
+    // backgroundColor: '#ffffffaa',
   },
   actbase: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain',
-    marginRight: 20,
-  }
+    flex: 1,
+    fontSize: 8,
+    letterSpacing: -0.6,
+    color: '#999',
+  },
+  contact: {
+    fontSize: 8,
+    letterSpacing: -0.4,
+    color: '#333',
+  },
+  contactUnderline: { position: 'absolute', left: 0, right: 0, bottom: 1.5, height: 2.5, backgroundColor: 'rgb(143,205,175)', zIndex: -1 }
 });
 
 
@@ -74,34 +89,35 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool, exten
         onPress={() => {
           setPosition(isRight ? PositionLeft : PositionRight);
         }}>
-        <Text allowFontScaling={false} style={styles.title}>DevTools <Text style={{ fontSize: 10 }}>v0.0.1</Text></Text>
+        <Text style={styles.company}>ACTBASE</Text>
+        <Text allowFontScaling={false} style={styles.title}>DEVTOOLS <Text style={{ fontSize: 8, color: '#999' }}>v0.1.0</Text></Text>
       </TouchableOpacity>
 
       <ScrollView style={{ flex: 1 }}>
-        <DeviceInfoView />
+        <DeviceInfoView even />
 
         <ToolButton onPress={() => RNRestart.Restart()}>
-          Restart
+          RESTART
         </ToolButton>
 
-        <ToolButton onPress={() => { setShowAxiosLog(!isShowAxiosLog); toggleTool() }}>
-          {isShowAxiosLog ? 'Hide' : 'Show'} Axios Log
+        <ToolButton onPress={() => { setShowAxiosLog(!isShowAxiosLog); toggleTool() }} even>
+          {isShowAxiosLog ? 'HIDE' : 'SHOW'} AXIOS LOG
         </ToolButton>
 
         <ToolButton onPress={() => { setShowAsyncStorage(!isShowAsyncStorage); toggleTool() }}>
-          {isShowAsyncStorage ? 'Hide' : 'Show'} AsyncStorage
+          {isShowAsyncStorage ? 'HIDE' : 'SHOW'} ASYNC STORAGE
         </ToolButton>
 
-        <ToolButton onPress={() => { setShowLog(!isShowLog); toggleTool() }}>
-          {isShowLog ? 'Hide' : 'Show'} Log
+        <ToolButton onPress={() => { setShowLog(!isShowLog); toggleTool() }} even>
+          {isShowLog ? 'HIDE' : 'SHOW'} LOG
         </ToolButton>
 
-        <ToolButton onPress={() => { setEnableDevTool(false) }} isLast>
-          Disable DevTool
+        <ToolButton onPress={() => { setEnableDevTool(false) }}>
+          DISABLE DEVTOOL
         </ToolButton>
 
         {extensions.length > 0 && (
-          <ToolSection title={'Extensions'} />
+          <ToolSection title={'EXTENSIONS'} />
         )}
 
         {extensions?.map(({ label, action, render }, index) => {
@@ -111,7 +127,7 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool, exten
                 <ToolButton
                   key={`tool-button-${index}`}
                   onPress={() => action()}
-                  isLast={extensions.length - 1 === index}>
+                  even={(index + 2) % 2 !== 0}>
                   {label}
                 </ToolButton>
               ),
@@ -120,16 +136,22 @@ const ToolContent = ({ position, setPosition, backgroundColor, toggleTool, exten
                   {render?.()}
                 </View>
               )
-            ].filter(e=>e)
+            ].filter(e => e)
           )
         })}
       </ScrollView>
-      <View style={[{ paddingBottom: inset.bottom }, styles.poweredBy]}>
-        <Image style={styles.actbase} source={assets.Actbase} />
-        <Text allowFontScaling={false} style={{ fontSize: 14 }}>
-          Powered By{'\n'}
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Actbase</Text>
+      <View style={[{ paddingBottom: inset.bottom }, styles.copyright]}>
+        <Text allowFontScaling={false} style={styles.actbase}>
+          POWERED BY ACTBASE.LLC.
         </Text>
+        <View style={{}}>
+          <Text style={styles.contact} onPress={() => {
+            Linking.openURL('mailto:project@actbase.io')
+          }}>
+            CONTACT
+          </Text>
+          <View style={styles.contactUnderline} />
+        </View>
       </View>
     </View>
   );

@@ -12,33 +12,35 @@ import DeviceInfo from 'react-native-device-info';
 import { getByteSizeAdjust } from '../utils/utils';
 import ToolButton from '../components/ToolView/ToolButton';
 // const DevTreeView = require('react-native-dev-treeview').default;
-const InfoRowHeight = 26;
+const InfoRowHeight = 20;
 
 const styles = StyleSheet.create({
-
-
   infoContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     flexDirection: 'column',
+    backgroundColor: '#ddddddaa',
   },
   infoRow: {
     padding: 4,
     height: InfoRowHeight,
     flexDirection: 'row',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#ffffff66',
+    // borderBottomWidth: StyleSheet.hairlineWidth,
+    // borderBottomColor: '#ddd'
     alignItems: 'center',
 
     // justifyContent: 'center',
   },
   infoName: {
-    fontWeight: 'bold',
-    color: 'white',
-    fontSize: 12,
-    width: 100,
+    color: '#999',
+    fontSize: 8,
+    letterSpacing: -0.4,
+    width: 80,
   },
   infoValue: {
-    color: 'white',
-    fontSize: 12,
+    color: '#333',
+    letterSpacing: -0.4,
+    fontSize: 8,
   },
   infoShowIndicatorWrapper: {
     height: 12,
@@ -49,15 +51,14 @@ const styles = StyleSheet.create({
   },
   infoShowIndicator: {
     position: 'absolute',
-    height: 2,
+    height: 0.5,
     width: 10,
-    borderRadius: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'black'
   },
 
 });
 
-const DeviceInfoView = () => {
+const DeviceInfoView = ({ even }: any) => {
   const [isShowInfo, setShowInfo] = React.useState(false);
   const [displayInfo, setDisplayInfo] = React.useState(false);
   const animate = React.useRef(new Animated.Value(0)).current;
@@ -65,22 +66,22 @@ const DeviceInfoView = () => {
   React.useEffect(() => {
     const loadInfo = async () => {
       const info = await [
-        { name: 'Version', getter: () => Promise.resolve(DeviceInfo.getVersion()) },
-        { name: 'Build Number', getter: () => Promise.resolve(DeviceInfo.getBuildNumber()) },
-        { name: 'Bundle Id', getter: () => Promise.resolve(DeviceInfo.getBundleId()) },
-        { name: 'Device Id', getter: () => Promise.resolve(DeviceInfo.getDeviceId()) },
-        { name: 'Android Id', getter: () => Promise.resolve(DeviceInfo.getAndroidId()) },
-        { name: 'Used Memory', getter: () => DeviceInfo.getUsedMemory().then(size => getByteSizeAdjust(size)) },
-        { name: 'Total Memory', getter: () => DeviceInfo.getTotalMemory().then(size => getByteSizeAdjust(size)) },
-        { name: 'Free DiskSpace', getter: () => DeviceInfo.getFreeDiskStorage().then(size => getByteSizeAdjust(size)) },
-        { name: 'IP Address', getter: () => DeviceInfo.getIpAddress() },
-        { name: 'MAC Address', getter: () => DeviceInfo.getMacAddress() },
-        { name: 'Has Notch', getter: () => Promise.resolve(DeviceInfo.hasNotch() ? 'true' : 'false') },
-        { name: 'Brand', getter: () => Promise.resolve(DeviceInfo.getBrand()) },
-        { name: 'Model', getter: () => Promise.resolve(DeviceInfo.getModel()) },
-        { name: 'Device Name', getter: () => DeviceInfo.getDeviceName() },
-        { name: 'System Name', getter: () => Promise.resolve(DeviceInfo.getSystemName()) },
-        { name: 'System Version', getter: () => Promise.resolve(DeviceInfo.getSystemVersion()) },
+        { name: 'VERSION', getter: () => Promise.resolve(DeviceInfo.getVersion()) },
+        { name: 'BUILD NUMBER', getter: () => Promise.resolve(DeviceInfo.getBuildNumber()) },
+        { name: 'BUNDLE ID', getter: () => Promise.resolve(DeviceInfo.getBundleId()) },
+        { name: 'DEVICE ID', getter: () => Promise.resolve(DeviceInfo.getDeviceId()) },
+        { name: 'ANDROID ID', getter: () => Promise.resolve(DeviceInfo.getAndroidId()) },
+        { name: 'USED MEMORY', getter: () => DeviceInfo.getUsedMemory().then(size => getByteSizeAdjust(size)) },
+        { name: 'TOTAL MEMORY', getter: () => DeviceInfo.getTotalMemory().then(size => getByteSizeAdjust(size)) },
+        { name: 'FREE DISKSPACE', getter: () => DeviceInfo.getFreeDiskStorage().then(size => getByteSizeAdjust(size)) },
+        { name: 'IP ADDRESS', getter: () => DeviceInfo.getIpAddress() },
+        { name: 'MAC ADDRESS', getter: () => DeviceInfo.getMacAddress() },
+        { name: 'HAS NOTCH', getter: () => Promise.resolve(DeviceInfo.hasNotch() ? 'true' : 'false') },
+        { name: 'BRAND', getter: () => Promise.resolve(DeviceInfo.getBrand()) },
+        { name: 'MODEL', getter: () => Promise.resolve(DeviceInfo.getModel()) },
+        { name: 'DEVICE NAME', getter: () => DeviceInfo.getDeviceName() },
+        { name: 'SYSTEM NAME', getter: () => Promise.resolve(DeviceInfo.getSystemName()) },
+        { name: 'SYSTEM VERSION', getter: () => Promise.resolve(DeviceInfo.getSystemVersion()) },
       ].map(({ name, getter }) => (collector: []) => getter().then((value) => [...collector, { name, value }]))
         .reduce((p, c: any) => p.then(c), Promise.resolve([]));
       setInfo(info);
@@ -106,20 +107,21 @@ const DeviceInfoView = () => {
   return (
     <View style={{}}>
       <ToolButton
+        even={even}
         onPress={() => setShowInfo(!isShowInfo)}
-        renderBeforeChildren={() => (
+        renderAfterChildren={() => (
           <View style={styles.infoShowIndicatorWrapper}>
-            <Animated.View style={[styles.infoShowIndicator, { transform: [{ rotate:rotate2 }] }]} />
+            <Animated.View style={[styles.infoShowIndicator, { transform: [{ rotate: rotate2 }] }]} />
             <Animated.View style={[styles.infoShowIndicator, { transform: [{ rotate }] }]} />
           </View>
         )}
-      >Device Info</ToolButton>
+      >DEVICE INFO</ToolButton>
 
       {displayInfo && (
         <Animated.View style={{
           height: animate.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, info.length * InfoRowHeight],
+            outputRange: [0, (info.length * InfoRowHeight) + 20],
           })
         }}>
           <ScrollView horizontal contentContainerStyle={styles.infoContainer}>

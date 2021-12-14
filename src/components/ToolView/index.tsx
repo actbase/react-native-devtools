@@ -12,27 +12,33 @@ import ToolContent from './ToolContent';
 import { PositionRight } from '../../commons/defines';
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     position: 'absolute',
-    zIndex: 1,
     top: 0,
     bottom: 0,
+    shadowOffset: {
+      width: -2, height: -2
+    },
+    shadowColor: 'black',
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
   },
-  containerRight: {
+  contentRight: {
     right: 0,
   },
-  containerLeft: {
+  contentLeft: {
     left: 0,
   },
 });
 
-const ToolView = ({ extensions = [] }: IToolViewProps) => {
-  const [isShow, setIsShow] = React.useState(false);
+const ToolView = ({ extensions = [], isOpen, onChangeOpen }: IToolViewProps) => {
+
   // const [isShowContent, setIsShowContent] = React.useState(false);
   const [opacity, setOpacity] = React.useState(0x40);
   const [position, setPosition] = React.useState(PositionRight);
+  const [shadowOpacity, setShadowOpacity] = React.useState(0);
 
-  const backgroundColor = `#000000${opacity.toString(16)}`;
+  const backgroundColor = `#fafafa${opacity.toString(16)}`;
   const width: number = Dimensions.get('window').width / 2;
   const appearAnimated = React.useRef(new Animated.Value(0)).current;
 
@@ -42,20 +48,26 @@ const ToolView = ({ extensions = [] }: IToolViewProps) => {
     outputRange: isRight ? [0, -width] : [0, width],
   });
 
-  const handleTouch = () => setIsShow(!isShow)
+  const handleTouch = () => {
+    onChangeOpen(!isOpen);
+  }
 
   React.useEffect(() => {
     // if (isShow) setIsShowContent(true);
+    if (isOpen)
+      setShadowOpacity(0.2);
     Animated.timing(appearAnimated, {
-      toValue: isShow ? 1 : 0,
+      toValue: isOpen ? 1 : 0,
       duration: 500,
       useNativeDriver: false,
     }).start(() => {
       // if (!isShow) setIsShowContent(false);
+      if (!isOpen)
+        setShadowOpacity(0);
     });
-  }, [isShow]);
+  }, [isOpen]);
 
-  React.useEffect(() => { setOpacity(0x80) }, []);
+  React.useEffect(() => { setOpacity(0xFF) }, []);
 
   return (
     <>
@@ -70,12 +82,13 @@ const ToolView = ({ extensions = [] }: IToolViewProps) => {
       />
       <Animated.View
         style={[
-          styles.container,
+          styles.content,
           isRight ? { right: -width } : { left: -width },
           {
             width: width,
             transform: [{ translateX }],
-            zIndex: Number.MAX_SAFE_INTEGER - 1,
+            zIndex: Number.MAX_SAFE_INTEGER - 2,
+            shadowOpacity
           },
           // isRight ? styles.containerRight : styles.containerLeft,
         ]}>
@@ -94,7 +107,7 @@ const ToolView = ({ extensions = [] }: IToolViewProps) => {
       </Animated.View>
     </>
   )
-}
+};
 
 export default ToolView;
 export {

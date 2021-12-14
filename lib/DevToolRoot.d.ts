@@ -1,3 +1,3 @@
-/// <reference types="react" />
-declare const DevTools: ({ axiosInstances, enabled: initialEnabled, extensions }: IDevToolsProps) => JSX.Element | null;
+import React from 'react';
+declare const DevTools: React.ForwardRefExoticComponent<IDevToolsProps & React.RefAttributes<unknown>>;
 export default DevTools;

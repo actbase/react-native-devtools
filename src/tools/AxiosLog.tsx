@@ -8,6 +8,7 @@ import { IAxiosLog } from '../context/@types/axios';
 import { ToolContext } from '../context/toolManager/ToolContext';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useASStoredState } from '../utils/ASStore';
+import ClearIconView from '../components/ClearIconView';
 const Scenes = require('react-native-scenes').default;
 const DevTreeView = require('react-native-dev-treeview').default;
 
@@ -167,7 +168,7 @@ const AxoisLog = (): JSX.Element | null => {
         <Button onPress={() => {
           setLogCount(prev => (prev + 100) % 600);
         }}>{`${logCount}`}</Button>
-        <Button onPress={clearLogList}>C</Button>
+        <Button onPress={clearLogList} ><ClearIconView /></Button>
         {extra}
       </View>
     )
@@ -184,7 +185,7 @@ const AxoisLog = (): JSX.Element | null => {
       renderHeaderExtra={innerTools}
       renderFooter={() => {
         return innerTools(
-          <View style={{ justifyContent: 'center', paddingHorizontal:3 }}>
+          <View style={{ justifyContent: 'center', paddingHorizontal: 3 }}>
             <Text style={{ fontSize, color: 'white' }}>{logs.length} logs</Text>
           </View>
         )
