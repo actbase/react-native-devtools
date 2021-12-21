@@ -1,6 +1,8 @@
 import React, { createContext } from 'react';
 
 const defaultToolContext: IDevTool = {
+  theme: 'white',
+  setTheme: () => { },
   axiosLog: undefined,
   asyncStorage: undefined,
   log: undefined,
@@ -19,10 +21,13 @@ const ToolContextProvider = ({ children }: IProps) => {
   const asyncStorage = React.useState<boolean>(false);
   const log = React.useState<boolean>(false);
   const [navigationContainer, setNavigationContainer] = React.useState([]);
+  const [theme, setTheme] = React.useState('white');
 
   return (
     <ToolContext.Provider
       value={{
+        theme, 
+        setTheme,
         axiosLog,
         asyncStorage,
         log,

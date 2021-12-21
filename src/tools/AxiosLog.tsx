@@ -15,11 +15,11 @@ const DevTreeView = require('react-native-dev-treeview').default;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#ffffff88',
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: 'white',
+    backgroundColor: '#fafafa',
   },
   logItem: {
     flexDirection: 'row',
@@ -27,17 +27,19 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   log: {
-    color: '#ffffff',
+    color: '#333',
+    marginHorizontal: 5,
+    fontSize: 6,
+    backgroundColor: 'transparent'
+  },
+  query: {
+    color: '#666',
     marginHorizontal: 5,
     fontSize: 8,
     backgroundColor: 'transparent'
   },
-  query: {
-
-    color: '#ffffff',
-    marginHorizontal: 5,
-    fontSize: 8,
-    backgroundColor: 'transparent'
+  logStatusText: {
+    color: 'white',
   },
   logStatus: {
     margin: 5,
@@ -67,15 +69,15 @@ const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
         <Text> - Request</Text>
-        <ScrollView style={{ width: '100%' }} horizontal >
+        <ScrollView style={{ width: '100%', backgroundColor: '#333' }} horizontal >
           <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log.config }} />
         </ScrollView>
         <Text> - Response</Text>
-        <ScrollView style={{ width: '100%' }} horizontal >
+        <ScrollView style={{ width: '100%', backgroundColor: '#333' }} horizontal >
           <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log.response }} />
         </ScrollView>
         <Text> - All</Text>
-        <ScrollView style={{ width: '100%' }} horizontal >
+        <ScrollView style={{ width: '100%', backgroundColor: '#333' }} horizontal >
           <DevTreeView autoExtendRoot={true} fontSize={fontSize} data={{ ...log }} />
         </ScrollView>
       </ScrollView>
@@ -85,9 +87,9 @@ const AxiosLogDetail = ({ log, ...etc }: { log: IAxiosLog, pop: Function }) => {
 
 const colorForStatus = (status: number | undefined): string | undefined => {
   if (typeof status === 'undefined') return;
-  else if (status >= 200 && status < 400) return '#228822';
+  else if (status >= 200 && status < 400) return '#229922';
   else if (status >= 400 && status < 500) return '#c82';
-  else if (status >= 500) return '#C00';
+  else if (status >= 500) return '#C33';
   return;
 }
 
@@ -106,12 +108,12 @@ const AxiosLogItem = ({ log, push }: { log: IAxiosLog, push: Function }) => {
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {log.response ? (
           <View style={[styles.logStatus, { backgroundColor: colorForStatus(log.status) }]}>
-            {<Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false} >{log?.method?.toUpperCase?.()}</Text>}
-            <Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false}>{log.status}</Text>
+            {<Text style={[styles.logStatusText, { fontSize: fontSize * 0.6 }]} allowFontScaling={false} >{log?.method?.toUpperCase?.()}</Text>}
+            <Text style={[styles.logStatusText, { fontSize: fontSize * 0.6 }]} allowFontScaling={false}>{log.status}</Text>
           </View>
         ) : (
           <View style={[styles.logStatus, { borderRadius: 0, }]}>
-            {<Text style={[styles.log, { fontSize: fontSize * 0.8 }]} allowFontScaling={false}>{log?.method?.toUpperCase?.()}</Text>}
+            {<Text style={[styles.log, { fontSize: fontSize * 0.6 }]} allowFontScaling={false}>{log?.method?.toUpperCase?.()}</Text>}
             <ActivityIndicator size="small" color="white" />
           </View>
         )}
@@ -152,7 +154,7 @@ const AxoisLog = (): JSX.Element | null => {
   const { axiosLog: [isShow, setShow] = [] } = useContext(ToolContext);
   const scenesRef = React.useRef<any>();
   const [routeIndex, setRouteIndex] = React.useState<number>(0);
-  const [fontSize, setFontSize] = useASStoredState('axios_log_fontSize', 14);
+  const [fontSize, setFontSize] = useASStoredState('axios_log_fontSize', 12);
   const [logCount, setLogCount] = useASStoredState('axios_log_count', 500);
 
   if (!isShow) return null;
@@ -168,7 +170,10 @@ const AxoisLog = (): JSX.Element | null => {
         <Button onPress={() => {
           setLogCount(prev => (prev + 100) % 600);
         }}>{`${logCount}`}</Button>
-        <Button onPress={clearLogList} ><ClearIconView /></Button>
+        <Button onPress={clearLogList} >
+          <ClearIconView />
+        </Button>
+
         {extra}
       </View>
     )

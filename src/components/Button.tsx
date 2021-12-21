@@ -32,7 +32,7 @@ const Button = ({ style, children, textStyle, onPress, ...etcProps }: Props): JS
         <Text style={textStyle ? [styles.textStyle, textStyle] : styles.textStyle}>{children}</Text>
       )
     }
-    else { }
+    else return children
   }, [children])
   return (
     <TouchableOpacity style={style ? [styles.container, style] : styles.container} onPress={onPress} {...etcProps}>

@@ -204,9 +204,9 @@ const Main = () => {
       <TouchableOpacity style={common_styles.button} onPress={() => AsyncStorage.setItem('firstDepthItem', 'asdf')}>
         <Text>Test AsyncStorage Bug</Text>
       </TouchableOpacity>
-      <View style={{ transform: [{ scale: 10 }] }}>
+      {/* <View style={{ transform: [{ scale: 10 }] }}>
         <ClearIconView />
-      </View>
+      </View> */}
 
       {/* <TouchableOpacity
         hitSlop={{
@@ -227,6 +227,24 @@ const Main = () => {
         }}
         isClose={isClose}
       /> */}
+
+      <View style={{ transform: [{ scale: 5 }, { translateY: 10 }] }}>
+        <View
+          style={{
+            width: 10,
+            height: 10,
+            // borderRadius: 5,
+            borderBottomColor: 'black',
+            borderLeftWidth: 0.5,
+            borderTopWidth: 0.5,
+            borderTopLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            borderBottomLeftRadius: 5,
+            borderBottomEndRadius: 5,
+            borderBottomStartRadius: 5,
+          }}
+        ></View>
+      </View>
     </View>
   );
 };

@@ -8,23 +8,22 @@ import {
 import ASGesutreResponder from '../useASGesutreResponder';
 
 // const HandleWidth = 20;
+const HandleOuterHeight = 55;
 const HandleHeight = 35;
 
 const styles = StyleSheet.create({
   handle: {
     position: 'absolute',
     top: '50%',
-    marginTop: -HandleHeight / 2,
-    height: HandleHeight,
-    width: 15,
+    marginTop: -HandleOuterHeight / 2,
+    width: 35,
+    height: HandleOuterHeight,
+    // backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
     zIndex: Number.MAX_SAFE_INTEGER - 1,
     overflow: 'hidden',
-    // shadowOffset: {
-    //   width: -2, height: -2
-    // },
-    // shadowColor: 'black',
-    // shadowRadius: 5,
-    // shadowOpacity: 0.2,
+
   },
   handleRight: {
     right: 0,
@@ -41,10 +40,18 @@ const styles = StyleSheet.create({
   handleInner: {
     width: HandleHeight,
     height: HandleHeight,
+    marginRight: -20,
     borderRadius: HandleHeight / 2,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    shadowOffset: {
+      width: -2, height: 0
+    },
+    shadowColor: 'black',
+    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    elevation: 10,
   },
   handleInnerRight: {
     paddingRight: 21.5,
@@ -85,11 +92,10 @@ const ToolHandle = ({
         styles.handle,
         isRight ? styles.handleRight : styles.handleLeft,
         { transform: [{ translateY: handle.pan.y }, { translateX }] },
-        ,
       ]}
-      {...handle.responder}
+
     >
-      <View style={[styles.handleInner, isRight ? styles.handleInnerRight : styles.handleInnerLeft, { backgroundColor }, { backgroundColor: 'white' }]}>
+      <View style={[styles.handleInner, isRight ? styles.handleInnerRight : styles.handleInnerLeft, { backgroundColor }, { backgroundColor: 'white' }]} {...handle.responder}>
         <View style={styles.handleBar} />
         <View style={styles.handleBar} />
       </View>
